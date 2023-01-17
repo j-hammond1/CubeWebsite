@@ -7,9 +7,14 @@ scene.background = new THREE.Color(0x404040);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 150);
 camera.position.set(20, 30, 40);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+const directionalLight = new THREE.DirectionalLight(0xaaaaaa, 1);
 camera.add(directionalLight);
 scene.add(camera);
+
+// const lightGrayLight = new THREE.AmbientLight(0xaaaaaa);
+const medGrayLight = new THREE.AmbientLight(0x909090);
+// const darkGrayLight = new THREE.AmbientLight(0x606060);
+scene.add(medGrayLight);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -32,26 +37,31 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix();
 });
 
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-}
+const turn90Quaternion = new THREE.Quaternion();
+turn90Quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2);
+const targetQuaternion = new THREE.Quaternion();
+const face = new THREE.Group();
+face.add(
+    subCubes[0],
+    subCubes[1],
+    subCubes[2],
+    subCubes[3],
+    subCubes[4],
+    subCubes[5],
+    subCubes[6],
+    subCubes[7],
+    subCubes[8]
+);
+scene.add(face);
 
-function animateRotation(face) {
-    requestAnimationFrame(animateRotation);
-    face.rotation.y += 0.01;
-    renderer.render(scene, camera);
-}
-
-animate();
+const speed = 2;
+var clock;
+var rotAnimationPlaying = false;
 
 document.addEventListener("keyup", documentKeyUp);
-
 function documentKeyUp(event) {
-    if (event.key == "u") {
-        // let uFace = new THREE.Group();
-        // uFace.add(
+    if (event.key == "u" && !rotAnimationPlaying) {
+        // face.add(
         //     subCubes[0],
         //     subCubes[1],
         //     subCubes[2],
@@ -62,10 +72,31 @@ function documentKeyUp(event) {
         //     subCubes[7],
         //     subCubes[8]
         // );
-        // scene.add(uFace);
-        // animateRotation(uFace);
-        // const light = new THREE.AmbientLight(0x404040); // soft white light
-        // scene.add(light);
-        console.log("Hello World");
+        // scene.add(face);
+
+        clock = new THREE.Clock();
+        targetQuaternion.multiplyQuaternions(face.quaternion, turn90Quaternion);
+        rotAnimationPlaying = true;
     }
 }
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+
+    if (rotAnimationPlaying) {
+        console.log("rotAnimationPlaying: " + rotAnimationPlaying);
+        const delta = clock.getDelta();
+        if (!face.quaternion.equals(targetQuaternion)) {
+            const step = speed * delta;
+            face.quaternion.rotateTowards(targetQuaternion, step);
+        } else if (face.quaternion.equals(targetQuaternion)) {
+            rotAnimationPlaying = false;
+            console.log("rotAnimationPlaying: " + rotAnimationPlaying);
+        }
+    }
+
+    renderer.render(scene, camera);
+}
+
+animate();
