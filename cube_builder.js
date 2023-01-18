@@ -3,71 +3,271 @@ import { RoundedBoxGeometry } from "https://cdn.skypack.dev/three@0.130.0/exampl
 
 export const subCubes = [];
 
-var baseC = 0x000000,
-    rightC = 0xff0000,
-    leftC = 0xffaa00,
-    upC = 0xffffff,
-    downC = 0xffff00,
-    frontC = 0x00aa00,
-    backC = 0x0000ff,
-    coord = 10,
-    scale = 10;
+const BASE_CLR = 0x000000,
+    R_CLR = 0xff0000,
+    L_CLR = 0xff8700,
+    U_CLR = 0xffffff,
+    D_CLR = 0xffff00,
+    F_CLR = 0x00aa00,
+    B_CLR = 0x0000ff,
+    COORD = 10,
+    SCALE = 10,
+    CRNRS = [0, 2, 6, 8, 18, 20, 24, 26],
+    EDGES = [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25],
+    CNTRS = [4, 10, 12, 14, 16, 22, 13];
+
+var subCubeID = 0;
+
+const cornerGeometry = new RoundedBoxGeometry(SCALE, SCALE, SCALE, 6, 0.85);
+// const centerGeometry = new RoundedBoxGeometry(scale, scale, scale, 6, 2);
+// const edgeGeometry = new RoundedBoxGeometry(scale, scale, scale, 6, 1);
+
+const LOADER = new THREE.TextureLoader();
+const CRNR_STICKER = LOADER.load("./images/stickers/stickerV7.png");
+const CNTR_STICKER = LOADER.load("./images/stickers/centerSticker.png");
+const EDGE_STICKER = LOADER.load("./images/stickers/edgeSticker.png");
+var stickers = new Array(27);
+
+for (let i of CRNRS) {
+    stickers[i] = CRNR_STICKER;
+}
+for (let i of EDGES) {
+    stickers[i] = EDGE_STICKER;
+}
+for (let i of CNTRS) {
+    stickers[i] = CNTR_STICKER;
+}
+
+// stickers.fill(STICKER);
+
+// for (let i = 0; i <= 26; i++) {
+//     stickers.push(LOADER.load(`./images/stickers/numbers/black${i}.png`));
+// }
 
 initCube();
 
 function initCube() {
-    createSubCube([-coord, coord, -coord], [baseC, leftC, upC, baseC, baseC, backC]); // 0
-    createSubCube([0, coord, -coord], [baseC, baseC, upC, baseC, baseC, backC]); // 1
-    createSubCube([coord, coord, -coord], [rightC, baseC, upC, baseC, baseC, backC]); // 2
+    // 0
+    createSubCube(
+        [-COORD, COORD, -COORD],
+        [BASE_CLR, L_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        [stickers[0], stickers[1], stickers[2]]
+    );
+    // 1
+    createSubCube(
+        [0, COORD, -COORD],
+        [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[1]
+    );
+    // 2
+    createSubCube(
+        [COORD, COORD, -COORD],
+        [R_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[2]
+    );
 
-    createSubCube([-coord, coord, 0], [baseC, leftC, upC, baseC, baseC, baseC]); // 3
-    createSubCube([0, coord, 0], [baseC, baseC, upC, baseC, baseC, baseC]); // 4
-    createSubCube([coord, coord, 0], [rightC, baseC, upC, baseC, baseC, baseC]); // 5
+    // 3
+    createSubCube(
+        [-COORD, COORD, 0],
+        [BASE_CLR, L_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[3]
+    );
+    // 4
+    createSubCube(
+        [0, COORD, 0],
+        [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[4]
+    );
+    // 5
+    createSubCube(
+        [COORD, COORD, 0],
+        [R_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[5]
+    );
 
-    createSubCube([-coord, coord, coord], [baseC, leftC, upC, baseC, frontC, baseC]); // 6
-    createSubCube([0, coord, coord], [baseC, baseC, upC, baseC, frontC, baseC]); // 7
-    createSubCube([coord, coord, coord], [rightC, baseC, upC, baseC, frontC, baseC]); // 8
-    ////
-    createSubCube([-coord, 0, -coord], [baseC, leftC, baseC, baseC, baseC, backC]); // 9
-    createSubCube([0, 0, -coord], [baseC, baseC, baseC, baseC, baseC, backC]); // 10
-    createSubCube([coord, 0, -coord], [rightC, baseC, baseC, baseC, baseC, backC]); // 11
+    // 6
+    createSubCube(
+        [-COORD, COORD, COORD],
+        [BASE_CLR, L_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[6]
+    );
+    // 7
+    createSubCube(
+        [0, COORD, COORD],
+        [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[7]
+    );
+    // 8
+    createSubCube(
+        [COORD, COORD, COORD],
+        [R_CLR, BASE_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[8]
+    );
 
-    createSubCube([-coord, 0, 0], [baseC, leftC, baseC, baseC, baseC, baseC]); // 12
-    createSubCube([0, 0, 0], [baseC, baseC, baseC, baseC, baseC, baseC]); // 13 ---CENTER---
-    createSubCube([coord, 0, 0], [rightC, baseC, baseC, baseC, baseC, baseC]); // 14
+    // 9
+    createSubCube(
+        [-COORD, 0, -COORD],
+        [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[9]
+    );
+    // 10
+    createSubCube(
+        [0, 0, -COORD],
+        [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[10]
+    );
+    // 11
+    createSubCube(
+        [COORD, 0, -COORD],
+        [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[11]
+    );
 
-    createSubCube([-coord, 0, coord], [baseC, leftC, baseC, baseC, frontC, baseC]); // 15
-    createSubCube([0, 0, coord], [baseC, baseC, baseC, baseC, frontC, baseC]); // 16
-    createSubCube([coord, 0, coord], [rightC, baseC, baseC, baseC, frontC, baseC]); // 17
-    ////
-    createSubCube([-coord, -coord, -coord], [baseC, leftC, baseC, downC, baseC, backC]); // 18
-    createSubCube([0, -coord, -coord], [baseC, baseC, baseC, downC, baseC, backC]); // 19
-    createSubCube([coord, -coord, -coord], [rightC, baseC, baseC, downC, baseC, backC]); // 20
+    // 12
+    createSubCube(
+        [-COORD, 0, 0],
+        [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[12]
+    );
+    // 13 ---CENTER---
+    createSubCube(
+        [0, 0, 0],
+        [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[13]
+    );
+    // 14
+    createSubCube(
+        [COORD, 0, 0],
+        [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[14]
+    );
 
-    createSubCube([-coord, -coord, 0], [baseC, leftC, baseC, downC, baseC, baseC]); // 21
-    createSubCube([0, -coord, 0], [baseC, baseC, baseC, downC, baseC, baseC]); // 22
-    createSubCube([coord, -coord, 0], [rightC, baseC, baseC, downC, baseC, baseC]); // 23
+    // 15
+    createSubCube(
+        [-COORD, 0, COORD],
+        [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[15]
+    );
+    // 16
+    createSubCube(
+        [0, 0, COORD],
+        [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[16]
+    );
+    // 17
+    createSubCube(
+        [COORD, 0, COORD],
+        [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[17]
+    );
 
-    createSubCube([-coord, -coord, coord], [baseC, leftC, baseC, downC, frontC, baseC]); // 24
-    createSubCube([0, -coord, coord], [baseC, baseC, baseC, downC, frontC, baseC]); // 25
-    createSubCube([coord, -coord, coord], [rightC, baseC, baseC, downC, frontC, baseC]); // 26
+    // 18
+    createSubCube(
+        [-COORD, -COORD, -COORD],
+        [BASE_CLR, L_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[18]
+    );
+    // 19
+    createSubCube(
+        [0, -COORD, -COORD],
+        [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[19]
+    );
+    // 20
+    createSubCube(
+        [COORD, -COORD, -COORD],
+        [R_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
+        cornerGeometry,
+        stickers[20]
+    );
+
+    // 21
+    createSubCube(
+        [-COORD, -COORD, 0],
+        [BASE_CLR, L_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[21]
+    );
+    // 22
+    createSubCube(
+        [0, -COORD, 0],
+        [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[22]
+    );
+    // 23
+    createSubCube(
+        [COORD, -COORD, 0],
+        [R_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[23]
+    );
+
+    // 24
+    createSubCube(
+        [-COORD, -COORD, COORD],
+        [BASE_CLR, L_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[24]
+    );
+    // 25
+    createSubCube(
+        [0, -COORD, COORD],
+        [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[25]
+    );
+    // 26
+    createSubCube(
+        [COORD, -COORD, COORD],
+        [R_CLR, BASE_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
+        cornerGeometry,
+        stickers[26]
+    );
 }
 
-function createSubCube(coords, colors) {
-    const subCubeGeometry = new RoundedBoxGeometry(scale, scale, scale, 6, 0.85);
+function createSubCube(coords, colors, geometry, textures) {
     const subCubeMaterials = [];
 
-    // STICKERED
-    const texture = new THREE.TextureLoader().load("./images/stickerV5.png");
-    for (let c of colors) {
-        subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: c, map: texture }));
-    }
-    // STICKERLESS
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[0], map: textures[0] })); // R
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[1], map: textures[1] })); // L
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[2], map: textures[2] })); // U
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[3], map: textures[3] })); // D
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[4], map: textures[4] })); // F
+    subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[5], map: textures[5] })); // B
+
+    // // STICKERED
+    // for (let c of colors) {
+    //     subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: c, map: texture }));
+    // }
+
+    // // STICKERLESS
     // for (let c of colors) {
     //     subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: c }));
     // }
 
-    const subCubeMesh = new THREE.Mesh(subCubeGeometry, subCubeMaterials);
+    const subCubeMesh = new THREE.Mesh(geometry, subCubeMaterials);
+    subCubeMesh.name = `subCube#${subCubeID++}`;
     subCubeMesh.position.set(coords[0], coords[1], coords[2]);
     subCubes.push(subCubeMesh);
 }
