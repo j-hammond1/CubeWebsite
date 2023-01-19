@@ -1,8 +1,6 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.130.0/build/three.module.js";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.0/examples/jsm/controls/OrbitControls.js";
 import { subCubes } from "./cube_builder.js";
-export { subCubes } from "./cube_builder.js";
-
 import {
     ALL_FACE_INDICES,
     POSSIBLE_MOVES,
@@ -14,6 +12,11 @@ import {
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x404040);
 
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 150);
 camera.position.set(25, 35, 35);
 camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.75));
@@ -21,11 +24,6 @@ scene.add(camera);
 
 scene.add(new THREE.AmbientLight(0x909090));
 scene.add(new THREE.AxesHelper(30));
-
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
