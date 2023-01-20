@@ -5,11 +5,17 @@ export const ALL_FACE_INDICES = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8], // U
     [0, 1, 2, 3, 4, 5, 6, 7, 8], // U'
 
+    [9, 10, 11, 12, 13, 14, 15, 16, 17], // E
+    [9, 10, 11, 12, 13, 14, 15, 16, 17], // E'
+
     [18, 19, 20, 21, 22, 23, 24, 25, 26], // D
     [18, 19, 20, 21, 22, 23, 24, 25, 26], // D'
 
     [6, 7, 8, 15, 16, 17, 24, 25, 26], // F
     [6, 7, 8, 15, 16, 17, 24, 25, 26], // F'
+
+    [3, 4, 5, 12, 13, 14, 21, 22, 23], // S
+    [3, 4, 5, 12, 13, 14, 21, 22, 23], // S'
 
     [0, 1, 2, 9, 10, 11, 18, 19, 20], // B
     [0, 1, 2, 9, 10, 11, 18, 19, 20], // B'
@@ -17,25 +23,53 @@ export const ALL_FACE_INDICES = [
     [2, 5, 8, 11, 14, 17, 20, 23, 26], // R
     [2, 5, 8, 11, 14, 17, 20, 23, 26], // R'
 
+    [1, 4, 7, 10, 13, 16, 19, 22, 25], // M
+    [1, 4, 7, 10, 13, 16, 19, 22, 25], // M'
+
     [0, 3, 6, 9, 12, 15, 18, 21, 24], // L
     [0, 3, 6, 9, 12, 15, 18, 21, 24], // L'
 ];
 
-export const POSSIBLE_MOVES = ["u", "U", "d", "D", "f", "F", "b", "B", "r", "R", "l", "L"];
+export const POSSIBLE_MOVES = [
+    "u",
+    "U",
+    "e",
+    "E",
+    "d",
+    "D",
+    "f",
+    "F",
+    "s",
+    "S",
+    "b",
+    "B",
+    "r",
+    "R",
+    "m",
+    "M",
+    "l",
+    "L",
+];
 
 export const STARTERS = {
     u: 0,
     U: 1,
-    d: 2,
-    D: 3,
-    f: 4,
-    F: 5,
-    b: 6,
-    B: 7,
-    r: 8,
-    R: 9,
-    l: 10,
-    L: 11,
+    e: 2,
+    E: 3,
+    d: 4,
+    D: 5,
+    f: 6,
+    F: 7,
+    s: 8,
+    S: 9,
+    b: 10,
+    B: 11,
+    r: 12,
+    R: 13,
+    m: 14,
+    M: 15,
+    l: 16,
+    L: 17,
 };
 
 export const FINISHERS = {
@@ -52,21 +86,47 @@ export const FINISHERS = {
     10: FINISH_FUNCTS[10],
     11: FINISH_FUNCTS[11],
     12: FINISH_FUNCTS[12],
+    13: FINISH_FUNCTS[13],
+    14: FINISH_FUNCTS[14],
+    15: FINISH_FUNCTS[15],
+    16: FINISH_FUNCTS[16],
+    17: FINISH_FUNCTS[17],
 };
 
+const U_EPrime_DPrime_Quaternion = newQuaternion(0, 1, 0, -1);
+const UPrime_E_D_Quaternion = newQuaternion(0, 1, 0, 1);
+const F_S_BPrime_Quaternion = newQuaternion(0, 0, 1, -1);
+const FPrime_SPrime_B_Quaternion = newQuaternion(0, 0, 1, 1);
+const R_MPrime_LPrime_Quaternion = newQuaternion(1, 0, 0, -1);
+const RPrime_M_L_Quaternion = newQuaternion(1, 0, 0, 1);
+
 export const TURN_QUATERNIONS = [
-    newQuaternion(0, 1, 0, -1), // U
-    newQuaternion(0, 1, 0, 1), // U'
-    newQuaternion(0, 1, 0, 1), // D
-    newQuaternion(0, 1, 0, -1), // D'
-    newQuaternion(0, 0, 1, -1), // F
-    newQuaternion(0, 0, 1, 1), // F'
-    newQuaternion(0, 0, 1, 1), // B
-    newQuaternion(0, 0, 1, -1), // B'
-    newQuaternion(1, 0, 0, -1), // R
-    newQuaternion(1, 0, 0, 1), // R'
-    newQuaternion(1, 0, 0, 1), // L
-    newQuaternion(1, 0, 0, -1), // L'
+    U_EPrime_DPrime_Quaternion, // U
+    UPrime_E_D_Quaternion, // U'
+
+    UPrime_E_D_Quaternion, // E
+    U_EPrime_DPrime_Quaternion, // E'
+
+    UPrime_E_D_Quaternion, // D
+    U_EPrime_DPrime_Quaternion, // D'
+
+    F_S_BPrime_Quaternion, // F
+    FPrime_SPrime_B_Quaternion, // F'
+
+    F_S_BPrime_Quaternion, // S
+    FPrime_SPrime_B_Quaternion, // S'
+
+    FPrime_SPrime_B_Quaternion, // B
+    F_S_BPrime_Quaternion, // B'
+
+    R_MPrime_LPrime_Quaternion, // R
+    RPrime_M_L_Quaternion, // R'
+
+    RPrime_M_L_Quaternion, // M
+    R_MPrime_LPrime_Quaternion, // M'
+
+    RPrime_M_L_Quaternion, // L
+    R_MPrime_LPrime_Quaternion, // L'
 ];
 
 function newQuaternion(x, y, z, dir) {

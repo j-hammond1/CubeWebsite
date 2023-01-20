@@ -5,17 +5,22 @@ import { ALL_FACE_INDICES } from "./turning_data.js";
 export const FINISH_FUNCTS = [
     finishU,
     finishUPrime,
+    finishE,
+    finishEPrime,
     finishD,
     finishDPrime,
     finishF,
     finishFPrime,
+    finishS,
+    finishSPrime,
     finishB,
     finishBPrime,
     finishR,
     finishRPrime,
+    finishM,
+    finishMPrime,
     finishL,
     finishLPrime,
-    debug,
 ];
 
 function translateX(subCube, amt) {
@@ -43,23 +48,12 @@ function updateSubCubeIndices(c, e) {
     subCubes[c[2]] = subCubes[c[3]];
     subCubes[c[3]] = temp;
 
-    // edges
+    // edges / centers
     temp = subCubes[e[0]];
     subCubes[e[0]] = subCubes[e[1]];
     subCubes[e[1]] = subCubes[e[2]];
     subCubes[e[2]] = subCubes[e[3]];
     subCubes[e[3]] = temp;
-}
-
-// function getNewPositions(subCube) {
-//     var vector = new THREE.Vector3().setFromMatrixPosition(subCube.matrixWorld);
-//     return [Math.round(vector.x), Math.round(vector.y), Math.round(vector.z)];
-// }
-
-function debug() {
-    console.log("debugging...");
-    console.log(subCubes);
-    // console.log(getNewPositions(subCubes[8]));
 }
 
 function finishU() {
@@ -90,6 +84,37 @@ function finishUPrime() {
     finishU();
 }
 
+function finishE() {
+    translateZ(subCubes[9], 20);
+
+    translateX(subCubes[10], -10);
+    translateZ(subCubes[10], 10);
+
+    translateX(subCubes[11], -20);
+
+    translateX(subCubes[12], 10);
+    translateZ(subCubes[12], 10);
+
+    translateX(subCubes[14], -10);
+    translateZ(subCubes[14], -10);
+
+    translateX(subCubes[15], 20);
+
+    translateX(subCubes[16], 10);
+    translateZ(subCubes[16], -10);
+
+    translateZ(subCubes[17], -20);
+
+    updateSubCubeRotations(2, [0, 1, 0], Math.PI / 2);
+    updateSubCubeIndices([15, 9, 11, 17], [16, 12, 10, 14]);
+}
+
+function finishEPrime() {
+    finishE();
+    finishE();
+    finishE();
+}
+
 function finishD() {
     translateX(subCubes[24], 20);
     translateZ(subCubes[18], 20);
@@ -108,7 +133,7 @@ function finishD() {
     translateX(subCubes[23], -10);
     translateZ(subCubes[23], -10);
 
-    updateSubCubeRotations(2, [0, 1, 0], Math.PI / 2);
+    updateSubCubeRotations(4, [0, 1, 0], Math.PI / 2);
     updateSubCubeIndices([24, 18, 20, 26], [25, 21, 19, 23]);
 }
 
@@ -136,7 +161,7 @@ function finishF() {
     translateX(subCubes[17], -10);
     translateY(subCubes[17], -10);
 
-    updateSubCubeRotations(4, [0, 0, 1], Math.PI / -2);
+    updateSubCubeRotations(6, [0, 0, 1], Math.PI / -2);
     updateSubCubeIndices([6, 24, 26, 8], [7, 15, 25, 17]);
 }
 
@@ -144,6 +169,37 @@ function finishFPrime() {
     finishF();
     finishF();
     finishF();
+}
+
+function finishS() {
+    translateX(subCubes[3], 20);
+
+    translateX(subCubes[4], 10);
+    translateY(subCubes[4], -10);
+
+    translateY(subCubes[5], -20);
+
+    translateX(subCubes[12], 10);
+    translateY(subCubes[12], 10);
+
+    translateX(subCubes[14], -10);
+    translateY(subCubes[14], -10);
+
+    translateY(subCubes[21], 20);
+
+    translateX(subCubes[22], -10);
+    translateY(subCubes[22], 10);
+
+    translateX(subCubes[23], -20);
+
+    updateSubCubeRotations(8, [0, 0, 1], Math.PI / -2);
+    updateSubCubeIndices([3, 21, 23, 5], [4, 12, 22, 14]);
+}
+
+function finishSPrime() {
+    finishS();
+    finishS();
+    finishS();
 }
 
 function finishB() {
@@ -164,7 +220,7 @@ function finishB() {
     translateX(subCubes[9], 10);
     translateY(subCubes[9], -10);
 
-    updateSubCubeRotations(6, [0, 0, 1], Math.PI / 2);
+    updateSubCubeRotations(10, [0, 0, 1], Math.PI / 2);
     updateSubCubeIndices([2, 20, 18, 0], [1, 11, 19, 9]);
 }
 
@@ -192,7 +248,7 @@ function finishR() {
     translateZ(subCubes[11], 10);
     translateY(subCubes[11], -10);
 
-    updateSubCubeRotations(8, [1, 0, 0], Math.PI / -2);
+    updateSubCubeRotations(12, [1, 0, 0], Math.PI / -2);
     updateSubCubeIndices([8, 26, 20, 2], [5, 17, 23, 11]);
 }
 
@@ -200,6 +256,37 @@ function finishRPrime() {
     finishR();
     finishR();
     finishR();
+}
+
+function finishM() {
+    translateZ(subCubes[1], 20);
+
+    translateZ(subCubes[4], 10);
+    translateY(subCubes[4], -10);
+
+    translateY(subCubes[7], -20);
+
+    translateZ(subCubes[10], 10);
+    translateY(subCubes[10], 10);
+
+    translateZ(subCubes[16], -10);
+    translateY(subCubes[16], -10);
+
+    translateY(subCubes[19], 20);
+
+    translateZ(subCubes[22], -10);
+    translateY(subCubes[22], 10);
+
+    translateZ(subCubes[25], -20);
+
+    updateSubCubeRotations(14, [1, 0, 0], Math.PI / 2);
+    updateSubCubeIndices([1, 19, 25, 7], [4, 10, 22, 16]);
+}
+
+function finishMPrime() {
+    finishM();
+    finishM();
+    finishM();
 }
 
 function finishL() {
@@ -220,7 +307,7 @@ function finishL() {
     translateZ(subCubes[15], -10);
     translateY(subCubes[15], -10);
 
-    updateSubCubeRotations(10, [1, 0, 0], Math.PI / 2);
+    updateSubCubeRotations(16, [1, 0, 0], Math.PI / 2);
     updateSubCubeIndices([0, 18, 24, 6], [3, 9, 21, 15]);
 }
 
