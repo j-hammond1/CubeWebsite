@@ -9,7 +9,6 @@ import {
     FINISHERS,
     TURN_QUATERNIONS,
 } from "./turning_data.js";
-// import { TURN_TRACKS } from "./turn_tracks.js";
 import {
     HITBOXES,
     U_TRACK,
@@ -74,7 +73,7 @@ window.addEventListener("resize", () => {
     camera.updateProjectionMatrix();
 });
 
-// ~~ ADD CUBE TO SCENE ~~
+// ~~ ADD CUBE AND HITBOXES TO SCENE ~~
 scene.add(...subCubes);
 scene.add(...HITBOXES);
 
@@ -104,7 +103,6 @@ var startDrag;
 var endDrag;
 var dragDist;
 var hasCrossedBoundary;
-var turnDirection;
 
 function findIntersect() {
     console.log("raycasting...");
@@ -155,8 +153,6 @@ function onMouseUp(event) {
         if (endDrag != undefined) {
             // ensure the drag starts and ends in two different hitboxes
             if (startDrag != endDrag) {
-                turnDirection = 1; // DEFAULT: CLOCKWISE
-
                 if (U_TRACK.includes(startDrag) && U_TRACK.includes(endDrag)) {
                     dragTurn(U_TRACK, 1, 0, 1);
                 }
@@ -209,8 +205,6 @@ function doesDragCrossBoundary(track) {
 }
 
 function dragTurn(track, turnDir, turn1, turn2) {
-    // let turnDir = defaultTurnDir; // 1: CLOCKWISE, -1: COUNTERCLOCKWISE
-
     hasCrossedBoundary = doesDragCrossBoundary(track);
     if (!hasCrossedBoundary) {
         if (dragDist < 0) {
