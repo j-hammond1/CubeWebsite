@@ -1,6 +1,7 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.130.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.skypack.dev/three@0.130.0/examples/jsm/controls/OrbitControls.js";
-// import Stats from "https://cdn.skypack.dev/three@0.130.0/examples/jsm/libs/stats.module.js";
+import * as THREE from "threejs";
+import { OrbitControls } from "OrbitControls";
+// import Stats from "Stats";
+
 import { subCubes } from "./cube_builder.js";
 import {
     ALL_FACE_INDICES,
@@ -24,20 +25,21 @@ import {
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x404040);
+scene.background = new THREE.Color(0x202020);
 
 // ~~ RENDERER ~~
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const canvas = document.getElementById("cube_window");
+const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
+renderer.setPixelRatio(canvas.devicePixelRatio);
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+document.getElementById("cube_div").appendChild(renderer.domElement);
 
 // ~~ CAMERA AND LIGHTING ~~
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 150);
+const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 150);
 camera.position.set(25, 35, 35);
 camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
 scene.add(camera);
-scene.add(new THREE.AmbientLight(0x9a9a9a));
+scene.add(new THREE.AmbientLight(0xaaaaaa));
 
 // // ~~ AXES HELPER ~~
 // scene.add(new THREE.AxesHelper(30));
@@ -63,13 +65,13 @@ scene.add(new THREE.AmbientLight(0x9a9a9a));
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 30;
+controls.minDistance = 40;
 controls.maxDistance = 100;
 
 // ~~ DYNAMIC WINDOW RESIZING ~~
 window.addEventListener("resize", () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
 });
 
@@ -86,6 +88,10 @@ function animationLoop() {
 
     if (isTurningActive) {
         turn();
+    }
+
+    if (doTurnsFromList) {
+        turnsFromList();
     }
 
     renderer.render(scene, camera);
@@ -117,13 +123,13 @@ function findIntersect() {
     }
 }
 
-window.addEventListener("mousedown", onMouseDown);
+canvas.addEventListener("mousedown", onMouseDown);
 function onMouseDown(event) {
     dragged = false;
     startDrag = undefined;
     endDrag = undefined;
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    pointer.x = (event.clientX / canvas.clientWidth) * 2 - 1;
+    pointer.y = -(event.clientY / canvas.clientHeight) * 2 + 1;
     startDrag = findIntersect();
 
     if (startDrag != undefined) {
@@ -133,20 +139,20 @@ function onMouseDown(event) {
     }
 }
 
-window.addEventListener("mousemove", onMouseMove);
+canvas.addEventListener("mousemove", onMouseMove);
 function onMouseMove() {
     dragged = true;
 }
 
-window.addEventListener("mouseup", onMouseUp);
+canvas.addEventListener("mouseup", onMouseUp);
 function onMouseUp(event) {
     controls.enableRotate = true;
     controls.enableZoom = true;
     // console.log("enabled rotate and zoom");
     // ensure the cursor was dragged, no turn is active, and the drag was started on the cube
     if (dragged && !isTurningActive && startDrag != undefined) {
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        pointer.x = (event.clientX / canvas.clientWidth) * 2 - 1;
+        pointer.y = -(event.clientY / canvas.clientHeight) * 2 + 1;
         endDrag = findIntersect();
 
         // ensure the the drag ends on the cube
@@ -155,31 +161,21 @@ function onMouseUp(event) {
             if (startDrag != endDrag) {
                 if (U_TRACK.includes(startDrag) && U_TRACK.includes(endDrag)) {
                     dragTurn(U_TRACK, 1, 0, 1);
-                }
-                if (E_TRACK.includes(startDrag) && E_TRACK.includes(endDrag)) {
+                } else if (E_TRACK.includes(startDrag) && E_TRACK.includes(endDrag)) {
                     dragTurn(E_TRACK, -1, 2, 3);
-                }
-                if (D_TRACK.includes(startDrag) && D_TRACK.includes(endDrag)) {
+                } else if (D_TRACK.includes(startDrag) && D_TRACK.includes(endDrag)) {
                     dragTurn(D_TRACK, -1, 4, 5);
-                }
-
-                if (F_TRACK.includes(startDrag) && F_TRACK.includes(endDrag)) {
+                } else if (F_TRACK.includes(startDrag) && F_TRACK.includes(endDrag)) {
                     dragTurn(F_TRACK, -1, 6, 7);
-                }
-                if (S_TRACK.includes(startDrag) && S_TRACK.includes(endDrag)) {
+                } else if (S_TRACK.includes(startDrag) && S_TRACK.includes(endDrag)) {
                     dragTurn(S_TRACK, -1, 8, 9);
-                }
-                if (B_TRACK.includes(startDrag) && B_TRACK.includes(endDrag)) {
+                } else if (B_TRACK.includes(startDrag) && B_TRACK.includes(endDrag)) {
                     dragTurn(B_TRACK, 1, 10, 11);
-                }
-
-                if (R_TRACK.includes(startDrag) && R_TRACK.includes(endDrag)) {
+                } else if (R_TRACK.includes(startDrag) && R_TRACK.includes(endDrag)) {
                     dragTurn(R_TRACK, 1, 12, 13);
-                }
-                if (M_TRACK.includes(startDrag) && M_TRACK.includes(endDrag)) {
+                } else if (M_TRACK.includes(startDrag) && M_TRACK.includes(endDrag)) {
                     dragTurn(M_TRACK, -1, 14, 15);
-                }
-                if (L_TRACK.includes(startDrag) && L_TRACK.includes(endDrag)) {
+                } else if (L_TRACK.includes(startDrag) && L_TRACK.includes(endDrag)) {
                     dragTurn(L_TRACK, -1, 16, 17);
                 }
             }
@@ -224,6 +220,19 @@ function dragTurn(track, turnDir, turn1, turn2) {
     }
 }
 
+// ~~ TURN QUEUE ~~
+var turn_list = [];
+var doTurnsFromList = false;
+function turnsFromList() {
+    if (!isTurningActive) {
+        if (turn_list.length != 0) {
+            turnStarter(turn_list.shift());
+        } else {
+            doTurnsFromList = false;
+        }
+    }
+}
+
 /*
  * ~~~~ KEYBOARD-TURNING SYSTEM ~~~~
  * 1. windowKeyDown():
@@ -254,17 +263,70 @@ const animationStep = 0.05;
 var isTurningActive = false;
 var turnID;
 var face;
+var completedMoves = [];
+var undoneMoves = [];
 
-window.addEventListener("keydown", windowKeyDown);
-function windowKeyDown(event) {
+document.addEventListener("keydown", documentKeyDown);
+function documentKeyDown(event) {
     if (!isTurningActive) {
-        if (POSSIBLE_MOVES.includes(event.key)) {
+        if (POSSIBLE_MOVES.includes(event.key) && !event.ctrlKey) {
             turnStarter(STARTERS[event.key]);
+        }
+        if (event.code == "KeyZ" && event.ctrlKey) {
+            if (!event.shiftKey && completedMoves.length != 0) {
+                console.log("undoing last move");
+                let lastMove = completedMoves.pop();
+                undoneMoves.push(lastMove);
+                if (lastMove % 2 == 0) {
+                    turnStarter(lastMove + 1);
+                } else {
+                    turnStarter(lastMove - 1);
+                }
+            } else if (event.shiftKey && undoneMoves.length != 0) {
+                console.log("redoing last move");
+                let lastMove = undoneMoves.pop();
+                completedMoves.push(lastMove);
+                turnStarter(lastMove);
+            }
+        }
+        if (event.key == "s" && event.ctrlKey) {
+            while (turn_list.length < 30) {
+                let rand_face = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+                let rand_turn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+                switch (rand_face) {
+                    case 0:
+                        turn_list.push(rand_turn == 0 ? 0 : 1);
+                        break;
+                    case 1:
+                        turn_list.push(rand_turn == 0 ? 4 : 5);
+                        break;
+                    case 2:
+                        turn_list.push(rand_turn == 0 ? 6 : 7);
+                        break;
+                    case 3:
+                        turn_list.push(rand_turn == 0 ? 10 : 11);
+                        break;
+                    case 4:
+                        turn_list.push(rand_turn == 0 ? 12 : 13);
+                        break;
+                    case 5:
+                        turn_list.push(rand_turn == 0 ? 16 : 17);
+                        break;
+                }
+            }
+
+            console.log(turn_list);
+            doTurnsFromList = true;
         }
     }
     if (event.key === "`") {
         console.log("debug key pressed");
+        // console.log(subCubes);
+        console.log("completed:", completedMoves);
+        console.log("undone:", undoneMoves);
+        // console.log(canvas.width, canvas.clientWidth);
         // console.log(startDrag, endDrag);
+        // doTurnsFromList = true;
     }
 }
 
@@ -291,6 +353,10 @@ function turnFinisher() {
     isTurningActive = false;
     scene.remove(face);
     FINISHERS[turnID]();
+
+    if (undoneMoves.length == 0) {
+        completedMoves.push(turnID);
+    }
 
     for (let i of ALL_FACE_INDICES[turnID]) {
         scene.add(subCubes[i]);

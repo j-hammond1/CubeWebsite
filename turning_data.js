@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.130.0/build/three.module.js";
+import * as THREE from "threejs";
 import { FINISH_FUNCTS } from "./turn_finishers.js";
 
 export const ALL_FACE_INDICES = [

@@ -1,56 +1,49 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.130.0/build/three.module.js";
-import { RoundedBoxGeometry } from "https://cdn.skypack.dev/three@0.130.0/examples/jsm/geometries/RoundedBoxGeometry.js";
+import * as THREE from "threejs";
+import { RoundedBoxGeometry } from "RoundedBoxGeometry";
+
+import {
+    BASE_CLR,
+    R_CLR,
+    L_CLR,
+    U_CLR,
+    D_CLR,
+    F_CLR,
+    B_CLR,
+    COORD,
+    SCALE,
+} from "./cube_builder_data.js";
+import {
+    txtrs,
+    initBlankModel,
+    initGrayscaleModel,
+    initStickerlessModel,
+    initSpeedcubeModel,
+    initBLDModel,
+    initDebugModel1,
+    initDebugModel2,
+    initEarthModel,
+    initRoseModel,
+    initCheckeredModel,
+    initChromecastImgsModel,
+    initVideoModel,
+} from "./cube_models.js";
 
 export const subCubes = [];
-
-const BASE_CLR = 0x000000,
-    R_CLR = 0xff0000,
-    L_CLR = 0xff8700,
-    U_CLR = 0xffffff,
-    D_CLR = 0xffff00,
-    F_CLR = 0x00aa00,
-    B_CLR = 0x0000ff,
-    COORD = 10,
-    SCALE = 10,
-    CRNRS = [
-        0, 2, 6, 8, 9, 11, 15, 17, 18, 20, 24, 26, 27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53,
-    ],
-    EDGES = [
-        1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 32, 34, 37, 39, 41, 43, 46, 48, 50, 52,
-    ],
-    CNTRS = [4, 13, 22, 31, 40, 49];
-
 var subCubeID = 0;
-
-const LOADER = new THREE.TextureLoader();
-const NULL_TXTR = LOADER.load("./images/stickers/blank_1px.png");
-const CRNR_STCKR = LOADER.load("./images/stickers/stickerV7.png");
-const CNTR_STCKR = LOADER.load("./images/stickers/centerSticker.png");
-
-const EDGE_STCKR_DOWN = LOADER.load("./images/stickers/edgeStickerDown.png");
-const EDGE_STCKR_UP = LOADER.load("./images/stickers/edgeStickerUp.png");
-const EDGE_STCKR_RIGHT = LOADER.load("./images/stickers/edgeStickerRight.png");
-const EDGE_STCKR_LEFT = LOADER.load("./images/stickers/edgeStickerLeft.png");
-
-// var txtrs = new Array(54);
-
-// for (let i of CRNRS) {
-//     txtrs[i] = CRNR_STCKR;
-// }
-// for (let i of EDGES) {
-//     txtrs[i] = EDGE_STICKER;
-// }
-// for (let i of CNTRS) {
-//     txtrs[i] = CNTR_STICKER;
-// }
-
 // console.log(txtrs);
 
-// txtrs.fill(STICKER);
-
-// for (let i = 0; i <= 26; i++) {
-//     txtrs.push(LOADER.load(`./images/stickers/numbers/black${i}.png`));
-// }
+// initBlankModel();
+// initGrayscaleModel();
+// initStickerlessModel();
+initSpeedcubeModel();
+// initBLDModel();
+// initDebugModel1();
+// initDebugModel2();
+// initEarthModel();
+// initRoseModel();
+// initCheckeredModel();
+// initChromecastImgsModel();
+// initVideoModel();
 
 initCube();
 
@@ -59,178 +52,186 @@ function initCube() {
     createSubCube(
         [-COORD, COORD, -COORD],
         [BASE_CLR, L_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, CRNR_STCKR, CRNR_STCKR, NULL_TXTR, NULL_TXTR, CRNR_STCKR]
+        [null, txtrs[18], txtrs[0], null, null, txtrs[47]]
     );
     // 1
     createSubCube(
         [0, COORD, -COORD],
         [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, NULL_TXTR, EDGE_STCKR_DOWN, NULL_TXTR, NULL_TXTR, EDGE_STCKR_DOWN]
+        [null, null, txtrs[1], null, null, txtrs[46]]
     );
     // 2
     createSubCube(
         [COORD, COORD, -COORD],
         [R_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [CRNR_STCKR, NULL_TXTR, CRNR_STCKR, NULL_TXTR, NULL_TXTR, CRNR_STCKR]
+        [txtrs[38], null, txtrs[2], null, null, txtrs[45]]
     );
     // 3
     createSubCube(
         [-COORD, COORD, 0],
         [BASE_CLR, L_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, EDGE_STCKR_DOWN, EDGE_STCKR_RIGHT, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [null, txtrs[19], txtrs[3], null, null, null]
     );
     // 4
     createSubCube(
         [0, COORD, 0],
         [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, CNTR_STCKR, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [null, null, txtrs[4], null, null, null]
     );
     // 5
     createSubCube(
         [COORD, COORD, 0],
         [R_CLR, BASE_CLR, U_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [EDGE_STCKR_DOWN, NULL_TXTR, EDGE_STCKR_LEFT, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [txtrs[37], null, txtrs[5], null, null, null]
     );
     // 6
     createSubCube(
         [-COORD, COORD, COORD],
         [BASE_CLR, L_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, CRNR_STCKR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR, NULL_TXTR]
+        [null, txtrs[20], txtrs[6], null, txtrs[27], null]
     );
     // 7
     createSubCube(
         [0, COORD, COORD],
         [BASE_CLR, BASE_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, EDGE_STCKR_UP, NULL_TXTR, EDGE_STCKR_DOWN, NULL_TXTR]
+        [null, null, txtrs[7], null, txtrs[28], null]
     );
     // 8
     createSubCube(
         [COORD, COORD, COORD],
         [R_CLR, BASE_CLR, U_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [CRNR_STCKR, NULL_TXTR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR, NULL_TXTR]
+        [txtrs[36], null, txtrs[8], null, txtrs[29], null]
     );
     // 9
     createSubCube(
         [-COORD, 0, -COORD],
         [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, EDGE_STCKR_RIGHT, NULL_TXTR, NULL_TXTR, NULL_TXTR, EDGE_STCKR_LEFT]
+        [null, txtrs[21], null, null, null, txtrs[50]]
     );
     // 10
     createSubCube(
         [0, 0, -COORD],
         [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, CNTR_STCKR]
+        [null, null, null, null, null, txtrs[49]]
     );
     // 11
     createSubCube(
         [COORD, 0, -COORD],
         [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, B_CLR],
-        [EDGE_STCKR_LEFT, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, EDGE_STCKR_RIGHT]
+        [txtrs[41], null, null, null, null, txtrs[48]]
     );
     // 12
     createSubCube(
         [-COORD, 0, 0],
         [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, CNTR_STCKR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [null, txtrs[22], null, null, null, null]
     );
     // 13 ---CENTER---
     createSubCube(
         [0, 0, 0],
         [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [null, null, null, null, null, null]
     );
     // 14
     createSubCube(
         [COORD, 0, 0],
         [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR],
-        [CNTR_STCKR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR]
+        [txtrs[40], null, null, null, null, null]
     );
     // 15
     createSubCube(
         [-COORD, 0, COORD],
         [BASE_CLR, L_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, EDGE_STCKR_LEFT, NULL_TXTR, NULL_TXTR, EDGE_STCKR_RIGHT, NULL_TXTR]
+        [null, txtrs[23], null, null, txtrs[30], null]
     );
     // 16
     createSubCube(
         [0, 0, COORD],
         [BASE_CLR, BASE_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, NULL_TXTR, CNTR_STCKR, NULL_TXTR]
+        [null, null, null, null, txtrs[31], null]
     );
     // 17
     createSubCube(
         [COORD, 0, COORD],
         [R_CLR, BASE_CLR, BASE_CLR, BASE_CLR, F_CLR, BASE_CLR],
-        [EDGE_STCKR_RIGHT, NULL_TXTR, NULL_TXTR, NULL_TXTR, EDGE_STCKR_LEFT, NULL_TXTR]
+        [txtrs[39], null, null, null, txtrs[32], null]
     );
     // 18
     createSubCube(
         [-COORD, -COORD, -COORD],
         [BASE_CLR, L_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR]
+        [null, txtrs[24], null, txtrs[15], null, txtrs[53]]
     );
     // 19
     createSubCube(
         [0, -COORD, -COORD],
         [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, EDGE_STCKR_UP, NULL_TXTR, EDGE_STCKR_UP]
+        [null, null, null, txtrs[16], null, txtrs[52]]
     );
     // 20
     createSubCube(
         [COORD, -COORD, -COORD],
         [R_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, B_CLR],
-        [CRNR_STCKR, NULL_TXTR, NULL_TXTR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR]
+        [txtrs[44], null, null, txtrs[17], null, txtrs[51]]
     );
     // 21
     createSubCube(
         [-COORD, -COORD, 0],
         [BASE_CLR, L_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, EDGE_STCKR_UP, NULL_TXTR, EDGE_STCKR_RIGHT, NULL_TXTR, NULL_TXTR]
+        [null, txtrs[25], null, txtrs[12], null, null]
     );
     // 22
     createSubCube(
         [0, -COORD, 0],
         [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, CNTR_STCKR, NULL_TXTR, NULL_TXTR]
+        [null, null, null, txtrs[13], null, null]
     );
     // 23
     createSubCube(
         [COORD, -COORD, 0],
         [R_CLR, BASE_CLR, BASE_CLR, D_CLR, BASE_CLR, BASE_CLR],
-        [EDGE_STCKR_UP, NULL_TXTR, NULL_TXTR, EDGE_STCKR_LEFT, NULL_TXTR, NULL_TXTR]
+        [txtrs[43], null, null, txtrs[14], null, null]
     );
     // 24
     createSubCube(
         [-COORD, -COORD, COORD],
         [BASE_CLR, L_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, CRNR_STCKR, NULL_TXTR, CRNR_STCKR, CRNR_STCKR, NULL_TXTR]
+        [null, txtrs[26], null, txtrs[9], txtrs[33], null]
     );
     // 25
     createSubCube(
         [0, -COORD, COORD],
         [BASE_CLR, BASE_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
-        [NULL_TXTR, NULL_TXTR, NULL_TXTR, EDGE_STCKR_DOWN, EDGE_STCKR_UP, NULL_TXTR]
+        [null, null, null, txtrs[10], txtrs[34], null]
     );
     // 26
     createSubCube(
         [COORD, -COORD, COORD],
         [R_CLR, BASE_CLR, BASE_CLR, D_CLR, F_CLR, BASE_CLR],
-        [CRNR_STCKR, NULL_TXTR, NULL_TXTR, CRNR_STCKR, CRNR_STCKR, NULL_TXTR]
+        [txtrs[42], null, null, txtrs[11], txtrs[35], null]
     );
 }
 
 function createSubCube(coords, colors, textures) {
     const subCubeMaterials = [];
+    const materialNames = ["R", "L", "U", "D", "F", "B"];
 
-    // STICKERED
     for (let i = 0; i < 6; i++) {
-        subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: colors[i], map: textures[i] }));
+        if (textures[i] !== null) {
+            subCubeMaterials[i] = new THREE.MeshPhongMaterial({
+                name: materialNames[i],
+                color: colors[i],
+                map: textures[i],
+            });
+        } else {
+            subCubeMaterials[i] = new THREE.MeshPhongMaterial({
+                name: materialNames[i],
+                color: colors[i],
+                // transparent: true,
+                // opacity: 0,
+            });
+        }
     }
-
-    // // STICKERLESS
-    // for (let c of colors) {
-    //     subCubeMaterials.push(new THREE.MeshPhongMaterial({ color: c }));
-    // }
 
     const subCubeGeometry = new RoundedBoxGeometry(SCALE, SCALE, SCALE, 6, 0.85);
     const subCubeMesh = new THREE.Mesh(subCubeGeometry, subCubeMaterials);

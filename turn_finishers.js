@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.130.0/build/three.module.js";
+import * as THREE from "threejs";
 import { subCubes } from "./cube_builder.js";
 import { ALL_FACE_INDICES } from "./turning_data.js";
 
