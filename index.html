@@ -5,34 +5,64 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" />
         <link rel="icon" type="image/png" href="./images/favicons/cube_favicon_48x.png" />
-        <title>Cube</title>
+        <title>JCube</title>
     </head>
 
     <body>
-        <!-- <div class="flexbox"> -->
+        <!-- Import maps polyfill -->
+        <!-- Remove this when import maps will be widely supported -->
+        <script async src="https://unpkg.com/es-module-shims/dist/es-module-shims.js"></script>
 
-        <div id="cube_div">
-            <!-- Import maps polyfill -->
-            <!-- Remove this when import maps will be widely supported -->
-            <script async src="https://unpkg.com/es-module-shims/dist/es-module-shims.js"></script>
-
-            <script type="importmap">
-                {
-                    "imports": {
-                        "threejs": "https://cdn.skypack.dev/three@0.130.0/build/three.module.js",
-                        "OrbitControls": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/controls/OrbitControls.js",
-                        "RoundedBoxGeometry": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/geometries/RoundedBoxGeometry.js",
-                        "Stats": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/libs/stats.module"
-                    }
+        <script type="importmap">
+            {
+                "imports": {
+                    "threejs": "https://cdn.skypack.dev/three@0.130.0/build/three.module.js",
+                    "OrbitControls": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/controls/OrbitControls.js",
+                    "RoundedBoxGeometry": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/geometries/RoundedBoxGeometry.js",
+                    "Stats": "https://cdn.skypack.dev/three@0.130.0/examples/jsm/libs/stats.module"
                 }
-            </script>
+            }
+        </script>
 
-            <canvas id="cube_window">
-                <script type="module" src="./main.js"></script>
-            </canvas>
+        <canvas id="cube-window" tabindex="1">
+            <script type="module" src="./main.js"></script>
+        </canvas>
+
+        <div id="control-menu">
+            <h1 id="header">JCube</h1>
+            <textarea name="moveinput" id="move-input"></textarea>
+
+            <div class="buttons">
+                <div id="control-buttons">
+                    <button class="control-button" id="scramble" type="button">
+                        <i class="fa-solid fa-shuffle fa-3x"></i>
+                    </button>
+                    <button class="control-button" id="reset" type="button">
+                        <i class="fa-solid fa-rotate fa-3x"></i>
+                    </button>
+                    <button class="control-button" id="undo" type="button">
+                        <i class="fa-solid fa-rotate-left fa-3x"></i>
+                    </button>
+                    <button class="control-button" id="redo" type="button">
+                        <i class="fa-solid fa-rotate-right fa-3x"></i>
+                    </button>
+                </div>
+
+                <div id="control-buttons">
+                    <button class="control-button" id="about" type="button">
+                        <i class="fa-solid fa-circle-info fa-3x"></i>
+                    </button>
+                    <button class="control-button" id="close" type="button">
+                        <i class="fa-solid fa-circle-xmark fa-3x"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-
-        <!-- </div> -->
     </body>
 </html>

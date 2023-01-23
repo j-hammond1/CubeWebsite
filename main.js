@@ -1,8 +1,8 @@
 import * as THREE from "threejs";
 import { OrbitControls } from "OrbitControls";
-// import Stats from "Stats";
+import Stats from "Stats";
 
-import { subCubes } from "./cube_builder.js";
+import { subCubes, resetCube } from "./cube_builder.js";
 import {
     ALL_FACE_INDICES,
     POSSIBLE_MOVES,
@@ -25,14 +25,15 @@ import {
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x202020);
+scene.background = new THREE.Color(0x464646);
 
 // ~~ RENDERER ~~
-const canvas = document.getElementById("cube_window");
+const canvas = document.getElementById("cube-window");
 const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
 renderer.setPixelRatio(canvas.devicePixelRatio);
 renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-document.getElementById("cube_div").appendChild(renderer.domElement);
+// console.log(renderer.domElement);
+// document.getElementById("cube-div").appendChild(renderer.domElement);
 
 // ~~ CAMERA AND LIGHTING ~~
 const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 150);
@@ -57,9 +58,9 @@ scene.add(new THREE.AmbientLight(0xaaaaaa));
 // );
 // scene.add(track_boundaries);
 
-// // ~~ STATS ~~
-// const stats = Stats();
-// document.body.appendChild(stats.dom);
+// ~~ STATS ~~
+const stats = Stats();
+document.body.appendChild(stats.dom);
 
 // ~~ ORBIT CONTROLS ~~
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -76,15 +77,15 @@ window.addEventListener("resize", () => {
 });
 
 // ~~ ADD CUBE AND HITBOXES TO SCENE ~~
-scene.add(...subCubes);
 scene.add(...HITBOXES);
+scene.add(...subCubes);
 
 // ~~ MAIN ANIMATON LOOP ~~
 animationLoop();
 function animationLoop() {
     requestAnimationFrame(animationLoop);
     controls.update();
-    // stats.update();
+    stats.update();
 
     if (isTurningActive) {
         turn();
@@ -233,6 +234,81 @@ function turnsFromList() {
     }
 }
 
+document.getElementById("scramble").onclick = scramble;
+function scramble() {
+    if (!isTurningActive) {
+        while (turn_list.length < 30) {
+            let rand_face = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+            let rand_turn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+            switch (rand_face) {
+                case 0:
+                    turn_list.push(rand_turn == 0 ? 0 : 1);
+                    break;
+                case 1:
+                    turn_list.push(rand_turn == 0 ? 4 : 5);
+                    break;
+                case 2:
+                    turn_list.push(rand_turn == 0 ? 6 : 7);
+                    break;
+                case 3:
+                    turn_list.push(rand_turn == 0 ? 10 : 11);
+                    break;
+                case 4:
+                    turn_list.push(rand_turn == 0 ? 12 : 13);
+                    break;
+                case 5:
+                    turn_list.push(rand_turn == 0 ? 16 : 17);
+                    break;
+            }
+        }
+        console.log(turn_list);
+        doTurnsFromList = true;
+    }
+}
+
+document.getElementById("reset").onclick = reset;
+function reset() {
+    if (!isTurningActive) {
+        console.log("resetting");
+        scene.remove(...subCubes);
+        resetCube();
+        completedMoves = [];
+        undoneMoves = [];
+        scene.add(...subCubes);
+    }
+}
+
+var completedMoves = [];
+var undoneMoves = [];
+var undoRequest = false;
+var redoRequest = false;
+
+document.getElementById("undo").onclick = undo;
+function undo() {
+    if (!isTurningActive && completedMoves.length != 0) {
+        console.log("undoing last move");
+        undoRequest = true;
+        let lastMove = completedMoves.pop();
+        undoneMoves.push(lastMove);
+        if (lastMove % 2 == 0) {
+            turnStarter(lastMove + 1);
+        } else {
+            turnStarter(lastMove - 1);
+        }
+    }
+}
+
+document.getElementById("redo").onclick = redo;
+function redo() {
+    if (!isTurningActive && undoneMoves.length != 0) {
+        console.log("redoing last move");
+        redoRequest = true;
+        let lastMove = undoneMoves.pop();
+        completedMoves.push(lastMove);
+        turnStarter(lastMove);
+    }
+}
+
 /*
  * ~~~~ KEYBOARD-TURNING SYSTEM ~~~~
  * 1. windowKeyDown():
@@ -263,67 +339,21 @@ const animationStep = 0.05;
 var isTurningActive = false;
 var turnID;
 var face;
-var completedMoves = [];
-var undoneMoves = [];
 
 document.addEventListener("keydown", documentKeyDown);
 function documentKeyDown(event) {
-    if (!isTurningActive) {
-        if (POSSIBLE_MOVES.includes(event.key) && !event.ctrlKey) {
+    if (!isTurningActive && document.activeElement == canvas) {
+        if (POSSIBLE_MOVES.includes(event.key)) {
             turnStarter(STARTERS[event.key]);
-        }
-        if (event.code == "KeyZ" && event.ctrlKey) {
-            if (!event.shiftKey && completedMoves.length != 0) {
-                console.log("undoing last move");
-                let lastMove = completedMoves.pop();
-                undoneMoves.push(lastMove);
-                if (lastMove % 2 == 0) {
-                    turnStarter(lastMove + 1);
-                } else {
-                    turnStarter(lastMove - 1);
-                }
-            } else if (event.shiftKey && undoneMoves.length != 0) {
-                console.log("redoing last move");
-                let lastMove = undoneMoves.pop();
-                completedMoves.push(lastMove);
-                turnStarter(lastMove);
-            }
-        }
-        if (event.key == "s" && event.ctrlKey) {
-            while (turn_list.length < 30) {
-                let rand_face = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
-                let rand_turn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-                switch (rand_face) {
-                    case 0:
-                        turn_list.push(rand_turn == 0 ? 0 : 1);
-                        break;
-                    case 1:
-                        turn_list.push(rand_turn == 0 ? 4 : 5);
-                        break;
-                    case 2:
-                        turn_list.push(rand_turn == 0 ? 6 : 7);
-                        break;
-                    case 3:
-                        turn_list.push(rand_turn == 0 ? 10 : 11);
-                        break;
-                    case 4:
-                        turn_list.push(rand_turn == 0 ? 12 : 13);
-                        break;
-                    case 5:
-                        turn_list.push(rand_turn == 0 ? 16 : 17);
-                        break;
-                }
-            }
-
-            console.log(turn_list);
-            doTurnsFromList = true;
         }
     }
     if (event.key === "`") {
         console.log("debug key pressed");
-        // console.log(subCubes);
+        // console.log("subcubes:", subCubes);
+        // console.log("scene children:", scene.children);
         console.log("completed:", completedMoves);
         console.log("undone:", undoneMoves);
+        // console.log("canvas focused:", document.activeElement == canvas);
         // console.log(canvas.width, canvas.clientWidth);
         // console.log(startDrag, endDrag);
         // doTurnsFromList = true;
@@ -354,9 +384,12 @@ function turnFinisher() {
     scene.remove(face);
     FINISHERS[turnID]();
 
-    if (undoneMoves.length == 0) {
+    if (!undoRequest && !redoRequest) {
         completedMoves.push(turnID);
+        // undoneMoves = [];
     }
+    undoRequest = false;
+    redoRequest = false;
 
     for (let i of ALL_FACE_INDICES[turnID]) {
         scene.add(subCubes[i]);

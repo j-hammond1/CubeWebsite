@@ -30,6 +30,12 @@ import {
 
 export const subCubes = [];
 var subCubeID = 0;
+
+export function resetCube() {
+    subCubes.length = 0;
+    subCubeID = 0;
+    initCube();
+}
 // console.log(txtrs);
 
 // initBlankModel();
