@@ -240,25 +240,34 @@ function scramble() {
         while (turn_list.length < 30) {
             let rand_face = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
             let rand_turn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-            switch (rand_face) {
-                case 0:
-                    turn_list.push(rand_turn == 0 ? 0 : 1);
-                    break;
-                case 1:
-                    turn_list.push(rand_turn == 0 ? 4 : 5);
-                    break;
-                case 2:
-                    turn_list.push(rand_turn == 0 ? 6 : 7);
-                    break;
-                case 3:
-                    turn_list.push(rand_turn == 0 ? 10 : 11);
-                    break;
-                case 4:
-                    turn_list.push(rand_turn == 0 ? 12 : 13);
-                    break;
-                case 5:
-                    turn_list.push(rand_turn == 0 ? 16 : 17);
-                    break;
+            let lastFace;
+            if (rand_face != lastFace) {
+                switch (rand_face) {
+                    case 0:
+                        turn_list.push(rand_turn == 0 ? 0 : 1);
+                        lastFace = 0;
+                        break;
+                    case 1:
+                        turn_list.push(rand_turn == 0 ? 4 : 5);
+                        lastFace = 1;
+                        break;
+                    case 2:
+                        turn_list.push(rand_turn == 0 ? 6 : 7);
+                        lastFace = 2;
+                        break;
+                    case 3:
+                        turn_list.push(rand_turn == 0 ? 10 : 11);
+                        lastFace = 3;
+                        break;
+                    case 4:
+                        turn_list.push(rand_turn == 0 ? 12 : 13);
+                        lastFace = 4;
+                        break;
+                    case 5:
+                        turn_list.push(rand_turn == 0 ? 16 : 17);
+                        lastFace = 5;
+                        break;
+                }
             }
         }
         console.log(turn_list);
