@@ -386,7 +386,7 @@ function turnFinisher() {
 
     if (!undoRequest && !redoRequest) {
         completedMoves.push(turnID);
-        // undoneMoves = [];
+        undoneMoves = [];
     }
     undoRequest = false;
     redoRequest = false;
