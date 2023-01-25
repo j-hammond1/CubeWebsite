@@ -222,12 +222,12 @@ function dragTurn(track, turnDir, turn1, turn2) {
 }
 
 // ~~ TURN QUEUE ~~
-var turn_list = [];
+var turnList = [];
 var doTurnsFromList = false;
 function turnsFromList() {
     if (!isTurningActive) {
-        if (turn_list.length != 0) {
-            turnStarter(turn_list.shift());
+        if (turnList.length != 0) {
+            turnStarter(turnList.shift());
         } else {
             doTurnsFromList = false;
         }
@@ -237,40 +237,40 @@ function turnsFromList() {
 document.getElementById("scramble").onclick = scramble;
 function scramble() {
     if (!isTurningActive) {
-        while (turn_list.length < 30) {
-            let rand_face = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
-            let rand_turn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-            let lastFace;
-            if (rand_face != lastFace) {
-                switch (rand_face) {
+        let lastFace;
+        while (turnList.length < 30) {
+            let randFace = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+            let randTurn = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+            if (randFace != lastFace) {
+                switch (randFace) {
                     case 0:
-                        turn_list.push(rand_turn == 0 ? 0 : 1);
+                        turnList.push(randTurn == 0 ? 0 : 1);
                         lastFace = 0;
                         break;
                     case 1:
-                        turn_list.push(rand_turn == 0 ? 4 : 5);
+                        turnList.push(randTurn == 0 ? 4 : 5);
                         lastFace = 1;
                         break;
                     case 2:
-                        turn_list.push(rand_turn == 0 ? 6 : 7);
+                        turnList.push(randTurn == 0 ? 6 : 7);
                         lastFace = 2;
                         break;
                     case 3:
-                        turn_list.push(rand_turn == 0 ? 10 : 11);
+                        turnList.push(randTurn == 0 ? 10 : 11);
                         lastFace = 3;
                         break;
                     case 4:
-                        turn_list.push(rand_turn == 0 ? 12 : 13);
+                        turnList.push(randTurn == 0 ? 12 : 13);
                         lastFace = 4;
                         break;
                     case 5:
-                        turn_list.push(rand_turn == 0 ? 16 : 17);
+                        turnList.push(randTurn == 0 ? 16 : 17);
                         lastFace = 5;
                         break;
                 }
             }
         }
-        console.log(turn_list);
+        console.log(turnList);
         doTurnsFromList = true;
     }
 }
