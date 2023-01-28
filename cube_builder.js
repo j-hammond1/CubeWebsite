@@ -229,6 +229,9 @@ function createSubCube(coords, colors, textures) {
                 name: materialNames[i],
                 color: colors[i],
                 map: textures[i],
+                // transparent: true,
+                // opacity: 0.5,
+                // side: THREE.BackSide,
             });
         } else {
             subCubeMaterials[i] = new THREE.MeshPhongMaterial({

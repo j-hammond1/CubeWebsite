@@ -20,7 +20,8 @@ import {
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x464646);
+// scene.background = new THREE.Color(0x202020);
+scene.background = new THREE.TextureLoader().load("./images/background2.png");
 
 // ~~ RENDERER ~~
 const canvas = document.getElementById("cube-window");
@@ -31,9 +32,10 @@ renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 // ~~ CAMERA AND LIGHTING ~~
 const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 150);
 camera.position.set(25, 35, 35);
-camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
-scene.add(camera);
-scene.add(new THREE.AmbientLight(0xaaaaaa));
+// camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
+// scene.add(camera);
+// scene.add(new THREE.AmbientLight(0xaaaaaa));
+scene.add(new THREE.AmbientLight(0xdddddd));
 
 // // ~~ AXES HELPER ~~
 // scene.add(new THREE.AxesHelper(30));

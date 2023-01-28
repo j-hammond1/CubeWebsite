@@ -10,6 +10,17 @@ body {
     outline: none;
 }
 
+/* #canvas-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgb(68, 68, 68);
+    background: radial-gradient(circle, rgba(68, 68, 68, 1) 0%, rgb(10, 10, 10) 90%);
+    z-index: 1;
+} */
+
 #cube-window {
     position: fixed;
     top: 0;
@@ -31,13 +42,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    background-color: rgb(42, 42, 42);
-    /* border-left: medium solid rgb(30, 30, 30); */
-    box-shadow: -8px 0px 9px 0px rgb(30, 30, 30);
+    background: rgb(18, 18, 18);
+    background: linear-gradient(160deg, rgb(22, 22, 22) 0%, rgba(0, 0, 0, 1) 100%);
+    box-shadow: -8px 0px 9px 0px rgb(0, 0, 0);
 }
 
 #header {
-    background-color: rgb(70, 70, 70);
+    background-color: rgb(50, 50, 50);
     font-family: "Rubik", sans-serif;
     width: 100%;
     text-align: center;
@@ -51,7 +62,7 @@ body {
 #move-input {
     height: 25%;
     width: 80%;
-    background-color: rgb(70, 70, 70);
+    background-color: rgb(50, 50, 50);
     border: none;
     resize: none;
     padding: 0.5vmax;
@@ -86,11 +97,11 @@ body {
 }
 
 #anim-speed-slider::-webkit-slider-runnable-track {
-    background-color: rgb(70, 70, 70);
+    background-color: rgb(50, 50, 50);
     border-radius: 1rem;
 }
 #anim-speed-slider::-moz-range-track {
-    background-color: rgb(70, 70, 70);
+    background-color: rgb(50, 50, 50);
     border-radius: 1rem;
 }
 
@@ -141,7 +152,7 @@ body {
     position: relative;
     height: 100%;
     width: 20%;
-    background-color: rgb(70, 70, 70);
+    background-color: rgb(50, 50, 50);
     box-shadow: 0 5px rgb(30, 30, 30);
     border: none;
     border-radius: 1rem;
@@ -152,7 +163,7 @@ body {
 }
 
 .control-button:hover {
-    background-color: rgb(60, 60, 60);
+    background-color: rgb(68, 68, 68);
 }
 
 .control-button:active {
@@ -184,7 +195,7 @@ body {
 }
 
 #menu-toggle:hover {
-    background-color: rgb(42, 42, 42);
+    background-color: rgb(68, 68, 68);
 }
 
 #menu-toggle:active {
