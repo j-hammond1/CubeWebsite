@@ -377,29 +377,6 @@ var face;
 
 document.addEventListener("keydown", documentKeyDown);
 function documentKeyDown(event) {
-    if (!isTurningActive && document.activeElement == canvas) {
-        // if (event.shiftKey) {
-        //     console.log("shift pressed:", event.key);
-        //     if (event.key !== "Shift") {
-        //         turnStarter(STARTERS[event.key.toLowerCase()] + 1);
-        //     }
-        // } else if (event.ctrlKey) {
-        //     console.log("ctrl pressed:", event.key);
-        //     if (event.key !== "Control") {
-        //         turnStarter(STARTERS[event.key.toLowerCase()] + 2);
-        //     }
-        // } else if (event.altKey) {
-        //     console.log("alt pressed:", event.key);
-        //     if (event.key !== "Alt") {
-        //         console.log(event.key);
-        //         console.log(STARTERS_WIDE[event.key]);
-        //         // turnStarter(STARTERS[event.key.toLowerCase()] + 2);
-        //     }
-        // } else {
-        //     console.log("no modifier pressed:", event.key);
-        //     turnStarter(STARTERS[event.key]);
-        // }
-    }
     if (event.key === "`") {
         console.log("debug key pressed");
         // let input = "Hello B2 ' , r'World! u 2' u2 ml m';";
