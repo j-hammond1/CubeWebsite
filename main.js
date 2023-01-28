@@ -20,8 +20,10 @@ import {
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
-// scene.background = new THREE.Color(0x202020);
-scene.background = new THREE.TextureLoader().load("./images/background2.png");
+scene.background = new THREE.TextureLoader().load("./images/background2.png", (txtr) => {
+    txtr.minFilter = THREE.LinearFilter;
+    txtr.magFilter = THREE.LinearFilter;
+});
 
 // ~~ RENDERER ~~
 const canvas = document.getElementById("cube-window");
