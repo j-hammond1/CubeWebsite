@@ -1,26 +1,55 @@
 import * as THREE from "threejs";
 import { subCubes } from "./cube_builder.js";
-import { ALL_FACE_INDICES } from "./turning_data.js";
+import { allFaceIndices } from "./turning_data.js";
 
-export const FINISH_FUNCTS = [
+export const FINISHERS = [
     finishU,
     finishUPrime,
+    finishU2,
+
     finishE,
     finishEPrime,
+    finishE2,
+
     finishD,
     finishDPrime,
+    finishD2,
+
     finishF,
     finishFPrime,
+    finishF2,
+
     finishS,
     finishSPrime,
+    finishS2,
+
     finishB,
     finishBPrime,
+    finishB2,
+
     finishR,
     finishRPrime,
+    finishR2,
+
     finishM,
     finishMPrime,
+    finishM2,
+
     finishL,
     finishLPrime,
+    finishL2,
+
+    finishX,
+    finishXPrime,
+    finishX2,
+
+    finishY,
+    finishYPrime,
+    finishY2,
+
+    finishZ,
+    finishZPrime,
+    finishZ2,
 ];
 
 function translateX(subCube, amt) {
@@ -33,9 +62,9 @@ function translateZ(subCube, amt) {
     subCube.position.z += amt;
 }
 
-function updateSubCubeRotations(index, vector, radians) {
+function updateSubCubeRotations(id, vector, radians) {
     const [x, y, z] = vector;
-    for (let i of ALL_FACE_INDICES[index]) {
+    for (let i of allFaceIndices(id)) {
         subCubes[i].rotateOnWorldAxis(new THREE.Vector3(x, y, z), radians);
     }
 }
@@ -55,7 +84,7 @@ function updateSubCubeIndices(c, e) {
     subCubes[e[2]] = subCubes[e[3]];
     subCubes[e[3]] = temp;
 }
-
+////
 function finishU() {
     translateX(subCubes[0], 20);
     translateZ(subCubes[6], -20);
@@ -84,6 +113,11 @@ function finishUPrime() {
     finishU();
 }
 
+function finishU2() {
+    finishU();
+    finishU();
+}
+////
 function finishE() {
     translateZ(subCubes[9], 20);
 
@@ -105,7 +139,7 @@ function finishE() {
 
     translateZ(subCubes[17], -20);
 
-    updateSubCubeRotations(2, [0, 1, 0], Math.PI / 2);
+    updateSubCubeRotations(3, [0, 1, 0], Math.PI / 2);
     updateSubCubeIndices([15, 9, 11, 17], [16, 12, 10, 14]);
 }
 
@@ -115,6 +149,11 @@ function finishEPrime() {
     finishE();
 }
 
+function finishE2() {
+    finishE();
+    finishE();
+}
+////
 function finishD() {
     translateX(subCubes[24], 20);
     translateZ(subCubes[18], 20);
@@ -133,7 +172,7 @@ function finishD() {
     translateX(subCubes[23], -10);
     translateZ(subCubes[23], -10);
 
-    updateSubCubeRotations(4, [0, 1, 0], Math.PI / 2);
+    updateSubCubeRotations(6, [0, 1, 0], Math.PI / 2);
     updateSubCubeIndices([24, 18, 20, 26], [25, 21, 19, 23]);
 }
 
@@ -143,6 +182,11 @@ function finishDPrime() {
     finishD();
 }
 
+function finishD2() {
+    finishD();
+    finishD();
+}
+////
 function finishF() {
     translateX(subCubes[6], 20);
     translateY(subCubes[24], 20);
@@ -161,7 +205,7 @@ function finishF() {
     translateX(subCubes[17], -10);
     translateY(subCubes[17], -10);
 
-    updateSubCubeRotations(6, [0, 0, 1], Math.PI / -2);
+    updateSubCubeRotations(9, [0, 0, 1], Math.PI / -2);
     updateSubCubeIndices([6, 24, 26, 8], [7, 15, 25, 17]);
 }
 
@@ -171,6 +215,11 @@ function finishFPrime() {
     finishF();
 }
 
+function finishF2() {
+    finishF();
+    finishF();
+}
+////
 function finishS() {
     translateX(subCubes[3], 20);
 
@@ -192,7 +241,7 @@ function finishS() {
 
     translateX(subCubes[23], -20);
 
-    updateSubCubeRotations(8, [0, 0, 1], Math.PI / -2);
+    updateSubCubeRotations(12, [0, 0, 1], Math.PI / -2);
     updateSubCubeIndices([3, 21, 23, 5], [4, 12, 22, 14]);
 }
 
@@ -202,6 +251,11 @@ function finishSPrime() {
     finishS();
 }
 
+function finishS2() {
+    finishS();
+    finishS();
+}
+////
 function finishB() {
     translateX(subCubes[2], -20);
     translateY(subCubes[20], 20);
@@ -220,7 +274,7 @@ function finishB() {
     translateX(subCubes[9], 10);
     translateY(subCubes[9], -10);
 
-    updateSubCubeRotations(10, [0, 0, 1], Math.PI / 2);
+    updateSubCubeRotations(15, [0, 0, 1], Math.PI / 2);
     updateSubCubeIndices([2, 20, 18, 0], [1, 11, 19, 9]);
 }
 
@@ -230,6 +284,11 @@ function finishBPrime() {
     finishB();
 }
 
+function finishB2() {
+    finishB();
+    finishB();
+}
+////
 function finishR() {
     translateZ(subCubes[8], -20);
     translateY(subCubes[26], 20);
@@ -248,7 +307,7 @@ function finishR() {
     translateZ(subCubes[11], 10);
     translateY(subCubes[11], -10);
 
-    updateSubCubeRotations(12, [1, 0, 0], Math.PI / -2);
+    updateSubCubeRotations(18, [1, 0, 0], Math.PI / -2);
     updateSubCubeIndices([8, 26, 20, 2], [5, 17, 23, 11]);
 }
 
@@ -258,6 +317,11 @@ function finishRPrime() {
     finishR();
 }
 
+function finishR2() {
+    finishR();
+    finishR();
+}
+////
 function finishM() {
     translateZ(subCubes[1], 20);
 
@@ -279,7 +343,7 @@ function finishM() {
 
     translateZ(subCubes[25], -20);
 
-    updateSubCubeRotations(14, [1, 0, 0], Math.PI / 2);
+    updateSubCubeRotations(21, [1, 0, 0], Math.PI / 2);
     updateSubCubeIndices([1, 19, 25, 7], [4, 10, 22, 16]);
 }
 
@@ -289,6 +353,11 @@ function finishMPrime() {
     finishM();
 }
 
+function finishM2() {
+    finishM();
+    finishM();
+}
+////
 function finishL() {
     translateZ(subCubes[0], 20);
     translateY(subCubes[18], 20);
@@ -307,7 +376,7 @@ function finishL() {
     translateZ(subCubes[15], -10);
     translateY(subCubes[15], -10);
 
-    updateSubCubeRotations(16, [1, 0, 0], Math.PI / 2);
+    updateSubCubeRotations(24, [1, 0, 0], Math.PI / 2);
     updateSubCubeIndices([0, 18, 24, 6], [3, 9, 21, 15]);
 }
 
@@ -315,4 +384,76 @@ function finishLPrime() {
     finishL();
     finishL();
     finishL();
+}
+
+function finishL2() {
+    finishL();
+    finishL();
+}
+////
+function finishX() {
+    finishR();
+    finishMPrime();
+    finishLPrime();
+}
+
+function finishXPrime() {
+    finishX();
+    finishX();
+    finishX();
+}
+
+function finishX2() {
+    finishX();
+    finishX();
+}
+////
+function finishY() {
+    finishU();
+    finishEPrime();
+    finishDPrime();
+}
+
+function finishYPrime() {
+    finishY();
+    finishY();
+    finishY();
+}
+
+function finishY2() {
+    finishY();
+    finishY();
+}
+////
+function finishZ() {
+    finishF();
+    finishS();
+    finishBPrime();
+}
+
+function finishZPrime() {
+    finishZ();
+    finishZ();
+    finishZ();
+}
+
+function finishZ2() {
+    finishZ();
+    finishZ();
+}
+////
+function finish_u() {
+    finishU();
+    finishEPrime();
+}
+
+function finish_uPrime() {
+    finish_u();
+    finish_u();
+    finish_u();
+}
+
+function finish_u2() {
+    finish_u();
+    finish_u();
 }

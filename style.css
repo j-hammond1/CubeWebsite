@@ -14,8 +14,9 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
-    width: 65vw;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
     /* border: medium solid rgb(30, 30, 30); */
 }
 
@@ -23,8 +24,9 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    height: 100vh;
-    width: 35vw;
+    height: 100%;
+    width: 35%;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -54,33 +56,96 @@ body {
     resize: none;
     padding: 0.5vmax;
     margin-top: 3vh;
+    margin-bottom: auto;
     font-size: xx-large;
     font-family: "Rubik", sans-serif;
+    color: white;
+    border-radius: 0.5rem;
 }
 
+#slider-div {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5vmin;
+}
+
+#anim-speed-slider {
+    position: relative;
+    width: 80%;
+    accent-color: white;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    margin: 0;
+    margin-left: 1vw;
+}
+
+#anim-speed-slider::-webkit-slider-runnable-track {
+    background-color: rgb(70, 70, 70);
+    border-radius: 1rem;
+}
+#anim-speed-slider::-moz-range-track {
+    background-color: rgb(70, 70, 70);
+    border-radius: 1rem;
+}
+
+/* #anim-speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 1rem;
+    background: blue;
+    height: 1rem;
+    width: 1rem;
+}
+#anim-speed-slider::-moz-range-thumb {
+    border: none;
+    border-radius: 1rem;
+    height: 1rem;
+    width: 1rem;
+}
+
+#anim-speed-slider::-webkit-slider-thumb::before {
+    content: "\f074";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: red;
+} */
+
 .buttons {
-    height: 20%;
+    /* height: 20%; */
+    height: 13%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-end;
 }
 
 #control-buttons {
-    height: 40%;
+    /* height: 50%; */
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+    margin-bottom: 3vh;
+    margin-top: 1vh;
 }
 
 .control-button {
+    position: relative;
     height: 100%;
     width: 20%;
     background-color: rgb(70, 70, 70);
     box-shadow: 0 5px rgb(30, 30, 30);
     border: none;
     border-radius: 1rem;
-    font-size: 1vw;
+    font-size: 1.5vmin;
     cursor: pointer;
     padding: 0;
     color: white;
@@ -95,10 +160,34 @@ body {
     transform: translateY(4px);
 }
 
-#about {
+/* #about {
     width: 45%;
+} */
+
+#menu-toggle {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    height: 8%;
+    width: 6%;
+    background-color: rgb(50, 50, 50);
+    box-shadow: 0 5px rgb(30, 30, 30);
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.5vmin;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 1%;
+    margin-left: 1%;
+    color: white;
 }
 
-#close {
-    width: 45%;
+#menu-toggle:hover {
+    background-color: rgb(42, 42, 42);
+}
+
+#menu-toggle:active {
+    box-shadow: 0 0;
+    transform: translateY(4px);
 }

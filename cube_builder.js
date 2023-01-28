@@ -17,6 +17,7 @@ import {
     initBlankModel,
     initGrayscaleModel,
     initStickerlessModel,
+    initStickeredModel,
     initSpeedcubeModel,
     initBLDModel,
     initDebugModel1,
@@ -36,12 +37,12 @@ export function resetCube() {
     subCubeID = 0;
     initCube();
 }
-// console.log(txtrs);
 
 // initBlankModel();
 // initGrayscaleModel();
 // initStickerlessModel();
-initSpeedcubeModel();
+initStickeredModel();
+// initSpeedcubeModel();
 // initBLDModel();
 // initDebugModel1();
 // initDebugModel2();

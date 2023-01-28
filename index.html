@@ -30,13 +30,26 @@
             }
         </script>
 
-        <canvas id="cube-window" tabindex="1">
+        <!-- tabindex="1" -->
+        <canvas id="cube-window">
             <script type="module" src="./main.js"></script>
         </canvas>
 
         <div id="control-menu">
             <h1 id="header">JCube</h1>
-            <textarea name="moveinput" id="move-input"></textarea>
+            <textarea id="move-input" placeholder="Input some moves..."></textarea>
+
+            <div id="slider-div">
+                <i class="fa-solid fa-stopwatch fa-2x"></i>
+                <input
+                    id="anim-speed-slider"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.005"
+                    value="0.05"
+                />
+            </div>
 
             <div class="buttons">
                 <div id="control-buttons">
@@ -54,15 +67,21 @@
                     </button>
                 </div>
 
-                <div id="control-buttons">
+                <!-- <div id="control-buttons">
                     <button class="control-button" id="about" type="button">
                         <i class="fa-solid fa-circle-info fa-3x"></i>
                     </button>
-                    <button class="control-button" id="close" type="button">
-                        <i class="fa-solid fa-circle-xmark fa-3x"></i>
-                    </button>
-                </div>
+                </div> -->
             </div>
         </div>
+        <button id="menu-toggle" type="button">
+            <i class="fa-solid fa-bars fa-3x"></i>
+        </button>
+
+        <!-- <audio id="music" src="./<music>.mp3" loop="true"></audio>
+        <script>
+            document.getElementById("music").volume = 0.1;
+            document.getElementById("music").play();
+        </script> -->
     </body>
 </html>

@@ -110,7 +110,6 @@ function initHitbox(coords, rotations, id) {
     const plane = new THREE.Mesh(
         new THREE.PlaneGeometry(10, 10),
         new THREE.MeshBasicMaterial({
-            color: 0xff00ff,
             side: THREE.DoubleSide,
             transparent: true,
             opacity: 0,

@@ -48,6 +48,10 @@ export function initStickerlessModel() {
     txtrs.fill(null);
 }
 
+export function initStickeredModel() {
+    txtrs.fill(LOADER.load("./images/stickers/stickerV7.png"));
+}
+
 export function initSpeedcubeModel() {
     const CRNR_STCKR = LOADER.load("./images/stickers/stickerV7.png");
     CRNR_STCKR.name = "CORNER_STICKER";
