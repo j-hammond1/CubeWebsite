@@ -37,7 +37,7 @@ camera.position.set(25, 35, 35);
 // camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
 // scene.add(camera);
 // scene.add(new THREE.AmbientLight(0xaaaaaa));
-scene.add(new THREE.AmbientLight(0xdddddd));
+scene.add(new THREE.AmbientLight(0xffffff));
 
 // // ~~ AXES HELPER ~~
 // scene.add(new THREE.AxesHelper(30));
@@ -79,7 +79,6 @@ scene.add(...HITBOXES);
 scene.add(...subCubes);
 
 // ~~ MAIN ANIMATON LOOP ~~
-animationLoop();
 function animationLoop() {
     requestAnimationFrame(animationLoop);
     controls.update();
@@ -88,12 +87,160 @@ function animationLoop() {
     if (isTurningActive) {
         turn();
     }
-
     if (doTurnsFromList) {
         turnsFromList();
     }
-
     renderer.render(scene, camera);
+}
+
+// ~~ TURN QUEUE ~~
+let turnList = [];
+let doTurnsFromList = false;
+function turnsFromList() {
+    if (!isTurningActive) {
+        turnList.length != 0 ? turnStarter(turnList.shift()) : (doTurnsFromList = false);
+    }
+}
+
+// ~~ CONTROL MENU TOGGLE ~~
+let menuOpen = false;
+document.getElementById("menu-toggle").onclick = () => {
+    canvas.style.zIndex = menuOpen ? 2 : 0;
+    canvas.style.width = menuOpen ? "100%" : "65%";
+    menuOpen = !menuOpen;
+    resizeCanvas();
+};
+
+// ~~ TEXTAREA MOVE INPUT ~~
+const moveInput = document.getElementById("move-input");
+moveInput.oninput = () => {
+    if (moveInput.value.includes("\n")) {
+        let input = moveInput.value;
+        moveInput.value = "";
+        moveInput.placeholder = input;
+
+        for (let i of input.trim().split(" ")) {
+            if (/^[uedfsbrmlxyz]['2]$|^[uedfsbrmlxyz]$/i.test(i)) {
+                turnList.push(POSSIBLE_MOVES.indexOf(i));
+            }
+        }
+        console.log("turnList:", turnList);
+        doTurnsFromList = true;
+    }
+};
+
+// ~~ ANIMATION SPEED SLIDER ~~
+const animSpeedSlider = document.getElementById("anim-speed-slider");
+animSpeedSlider.oninput = () => {
+    animationSpeed = animSpeedSlider.value;
+    console.log(`animationSpeed: ${animationSpeed}`);
+};
+
+// ~~ SCRAMBLE BUTTON ~~
+document.getElementById("scramble").onclick = () => {
+    if (!isTurningActive) {
+        let lastFace;
+        while (turnList.length < 30) {
+            let randFace = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+            let randTurn = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
+
+            if (randFace != lastFace) {
+                switch (randFace) {
+                    case 0:
+                        turnList.push(randTurn === 0 ? 0 : randTurn === 1 ? 1 : 2); // U
+                        lastFace = 0;
+                        break;
+                    case 1:
+                        turnList.push(randTurn === 0 ? 6 : randTurn === 1 ? 7 : 8); // D
+                        lastFace = 1;
+                        break;
+                    case 2:
+                        turnList.push(randTurn === 0 ? 9 : randTurn === 1 ? 10 : 11); // F
+                        lastFace = 2;
+                        break;
+                    case 3:
+                        turnList.push(randTurn === 0 ? 15 : randTurn === 1 ? 16 : 17); // B
+                        lastFace = 3;
+                        break;
+                    case 4:
+                        turnList.push(randTurn === 0 ? 18 : randTurn === 1 ? 19 : 20); // R
+                        lastFace = 4;
+                        break;
+                    case 5:
+                        turnList.push(randTurn === 0 ? 24 : randTurn === 1 ? 25 : 26); // L
+                        lastFace = 5;
+                        break;
+                }
+            }
+        }
+        console.log(turnList);
+        doTurnsFromList = true;
+        let moves = turnList.map((id) => POSSIBLE_MOVES[id]);
+        moveInput.placeholder = moves.toString().replaceAll(",", " ");
+    }
+};
+
+// ~~ RESET BUTTON ~~
+document.getElementById("reset").onclick = () => {
+    if (!isTurningActive) {
+        console.log("resetting");
+        scene.remove(...subCubes);
+        resetCube();
+        completedMoves = [];
+        undoneMoves = [];
+        moveInput.placeholder = "Input some moves...";
+        animationSpeed = 0.05;
+        animSpeedSlider.value = 0.05;
+        scene.add(...subCubes);
+    }
+};
+
+// ~~ UNDO/REDO SYSTEM ~~
+let completedMoves = [];
+let undoneMoves = [];
+let undoRequest = false;
+let redoRequest = false;
+
+document.getElementById("undo").onclick = () => {
+    if (!isTurningActive && completedMoves.length != 0) {
+        console.log("undoing last move");
+        undoRequest = true;
+        let lastMove = completedMoves.pop();
+        undoneMoves.push(lastMove);
+
+        if (lastMove % 3 == 0) {
+            turnStarter(lastMove + 1);
+        } else if (lastMove % 3 == 1) {
+            turnStarter(lastMove - 1);
+        } else if (lastMove % 3 == 2) {
+            turnStarter(lastMove);
+        }
+    }
+};
+document.getElementById("redo").onclick = () => {
+    if (!isTurningActive && undoneMoves.length != 0) {
+        console.log("redoing last move");
+        redoRequest = true;
+        let lastMove = undoneMoves.pop();
+        completedMoves.push(lastMove);
+        turnStarter(lastMove);
+    }
+};
+
+// ~~ KEYBOARD INPUT ~~
+document.addEventListener("keydown", documentKeyDown);
+function documentKeyDown(event) {
+    if (event.key === "`") {
+        console.log("debug key pressed");
+        // console.log("subcubes:", subCubes);
+        // console.log("scene children:", scene.children);
+        // console.log("completed:", completedMoves);
+        // console.log("undone:", undoneMoves);
+        // console.log("canvas focused:", document.activeElement == canvas);
+        // console.log(canvas.width, canvas.clientWidth);
+        // console.log(startDrag, endDrag);
+        // new Audio("./turnSound.mp3").play();
+    }
 }
 
 /*
@@ -103,11 +250,10 @@ function animationLoop() {
  */
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-var dragged;
-var startDrag;
-var endDrag;
-var dragDist;
-var hasCrossedBoundary;
+let dragged;
+let startDrag;
+let endDrag;
+let dragDist;
 
 function findIntersect() {
     console.log("raycasting...");
@@ -183,11 +329,8 @@ function doesDragCrossBoundary(track) {
     dragDist = track.indexOf(startDrag) - track.indexOf(endDrag);
 
     console.log(`%c ${track} dragged`, "color: #00ff00");
-    console.log(
-        `%c start indx: ${track.indexOf(startDrag)}, end indx: ${track.indexOf(endDrag)}`,
-        "color: #00ff00"
-    );
-    console.log(`%c dist: ${dragDist}`, "color: #00ff00");
+    console.log(`start indx: ${track.indexOf(startDrag)}, end indx: ${track.indexOf(endDrag)}`);
+    console.log(`dist: ${dragDist}`);
 
     if (dragDist > 5 || dragDist < -5) {
         console.log("%c dragged across boundary", "color: #ff8700");
@@ -197,7 +340,7 @@ function doesDragCrossBoundary(track) {
 }
 
 function dragTurn(track, turnDir, turn1, turn2) {
-    hasCrossedBoundary = doesDragCrossBoundary(track);
+    let hasCrossedBoundary = doesDragCrossBoundary(track);
     if (!hasCrossedBoundary) {
         if (dragDist < 0) {
             turnDir *= -1; // change direction
@@ -216,192 +359,11 @@ function dragTurn(track, turnDir, turn1, turn2) {
     }
 }
 
-// ~~ TURN QUEUE ~~
-var turnList = [];
-var doTurnsFromList = false;
-function turnsFromList() {
-    if (!isTurningActive) {
-        turnList.length != 0 ? turnStarter(turnList.shift()) : (doTurnsFromList = false);
-    }
-}
-
-const moveInput = document.getElementById("move-input");
-moveInput.oninput = readMoveInput;
-function readMoveInput() {
-    if (moveInput.value.includes("\n")) {
-        let input = moveInput.value;
-        moveInput.value = "";
-        moveInput.placeholder = input;
-
-        for (let i of input.trim().split(" ")) {
-            if (/^[uedfsbrmlxyz]['2]$|^[uedfsbrmlxyz]$/i.test(i)) {
-                turnList.push(POSSIBLE_MOVES.indexOf(i));
-            }
-        }
-        console.log("turnList:", turnList);
-        doTurnsFromList = true;
-    }
-}
-
-document.getElementById("scramble").onclick = scramble;
-function scramble() {
-    if (!isTurningActive) {
-        let lastFace;
-        while (turnList.length < 30) {
-            let randFace = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
-            let randTurn = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
-
-            if (randFace != lastFace) {
-                switch (randFace) {
-                    case 0:
-                        turnList.push(randTurn === 0 ? 0 : randTurn === 1 ? 1 : 2); // U
-                        lastFace = 0;
-                        break;
-                    case 1:
-                        turnList.push(randTurn === 0 ? 6 : randTurn === 1 ? 7 : 8); // D
-                        lastFace = 1;
-                        break;
-                    case 2:
-                        turnList.push(randTurn === 0 ? 9 : randTurn === 1 ? 10 : 11); // F
-                        lastFace = 2;
-                        break;
-                    case 3:
-                        turnList.push(randTurn === 0 ? 15 : randTurn === 1 ? 16 : 17); // B
-                        lastFace = 3;
-                        break;
-                    case 4:
-                        turnList.push(randTurn === 0 ? 18 : randTurn === 1 ? 19 : 20); // R
-                        lastFace = 4;
-                        break;
-                    case 5:
-                        turnList.push(randTurn === 0 ? 24 : randTurn === 1 ? 25 : 26); // L
-                        lastFace = 5;
-                        break;
-                }
-            }
-        }
-        console.log(turnList);
-        doTurnsFromList = true;
-
-        let moves = turnList.map((id) => POSSIBLE_MOVES[id]);
-        moveInput.placeholder = moves.toString().replaceAll(",", " ");
-    }
-}
-
-document.getElementById("reset").onclick = () => {
-    if (!isTurningActive) {
-        console.log("resetting");
-        scene.remove(...subCubes);
-        resetCube();
-        completedMoves = [];
-        undoneMoves = [];
-        moveInput.placeholder = "Input some moves...";
-        animationSpeed = 0.05;
-        animSpeedSlider.value = 0.05;
-        scene.add(...subCubes);
-    }
-};
-
-var completedMoves = [];
-var undoneMoves = [];
-var undoRequest = false;
-var redoRequest = false;
-
-document.getElementById("undo").onclick = () => {
-    if (!isTurningActive && completedMoves.length != 0) {
-        console.log("undoing last move");
-        undoRequest = true;
-        let lastMove = completedMoves.pop();
-        undoneMoves.push(lastMove);
-
-        if (lastMove % 3 == 0) {
-            turnStarter(lastMove + 1);
-        } else if (lastMove % 3 == 1) {
-            turnStarter(lastMove - 1);
-        } else if (lastMove % 3 == 2) {
-            turnStarter(lastMove);
-        }
-    }
-};
-
-document.getElementById("redo").onclick = () => {
-    if (!isTurningActive && undoneMoves.length != 0) {
-        console.log("redoing last move");
-        redoRequest = true;
-        let lastMove = undoneMoves.pop();
-        completedMoves.push(lastMove);
-        turnStarter(lastMove);
-    }
-};
-
-let menuOpen = false;
-document.getElementById("menu-toggle").onclick = () => {
-    canvas.style.zIndex = menuOpen ? 2 : 0;
-    canvas.style.width = menuOpen ? "100%" : "65%";
-    menuOpen = !menuOpen;
-    resizeCanvas();
-};
-
-const animSpeedSlider = document.getElementById("anim-speed-slider");
-animSpeedSlider.oninput = () => {
-    animationSpeed = animSpeedSlider.value;
-    console.log(`animationSpeed: ${animationSpeed}`);
-};
-
-/*
- * ~~~~ KEYBOARD-TURNING SYSTEM ~~~~
- * 1. windowKeyDown():
- *      - detect keydown event
- *      - ensure a turn isnt already in progress
- *      - ensure the event key is a possible move
- *      - call turnStarter()
- *
- * 2. turnStarter():
- *     - use STARTERS dictionary to convert the key press into a turn ID
- *     - turnStarter sets the global var turnID, makes a new group,
- *       uses turnID and ALL_FACE_INDICES array to add the appropriate subCubes to the group, adds the group to the scene,
- *       and sets isTurningActive to true
- *
- * 3. turn():
- *     - as soon as isTurningActive is true, turn() will be called from the main animation loop function
- *     - turn() slowly rotates the "face" group toward a target quaternion, given by using turnID to select
- *       the appropriate quaternion from TURN_QUATERNIONS
- *     - once the face's quaternion matches the target quaternion, call turnFinisher()
- *
- * 4. turnFinisher():
- *     - sets isTurningActive to false
- *     - removes the face group from the scene
- *     - uses the turnID to call the appropriate finisher method in the FINISHERS dictionary
- *     - uses the turnID and ALL_FACE_INDICES array to add the appropriate subCubes back to the scene
- */
-var animationSpeed = 0.05;
-var isTurningActive = false;
-var turnID;
-var face;
-
-document.addEventListener("keydown", documentKeyDown);
-function documentKeyDown(event) {
-    if (event.key === "`") {
-        console.log("debug key pressed");
-        // let input = "Hello B2 ' , r'World! u 2' u2 ml m';";
-        // let cleanedInput = input.replace(/[^uedfsbrmlxyz'2 ]+/gi, "").split(" ");
-        // let finalMoves = [];
-        // for (let i of cleanedInput) {
-        //     if (/^[uedfsbrmlxyz]['2]$|^[uedfsbrmlxyz]$/i.test(i)) {
-        //         finalMoves.push(i);
-        //     }
-        // }
-        // console.log(finalMoves);
-        // console.log("subcubes:", subCubes);
-        // console.log("scene children:", scene.children);
-        // console.log("completed:", completedMoves);
-        // console.log("undone:", undoneMoves);
-        // console.log("canvas focused:", document.activeElement == canvas);
-        // console.log(canvas.width, canvas.clientWidth);
-        // console.log(startDrag, endDrag);
-        // new Audio("./turnSound.mp3").play();
-    }
-}
+// ~~ TURNING SYSTEM ~~
+let isTurningActive = false;
+let animationSpeed = 0.05;
+let turnID;
+let face;
 
 function turnStarter(id) {
     turnID = id;
@@ -418,7 +380,7 @@ function turnStarter(id) {
 function turn() {
     if (!face.quaternion.equals(TURN_QUATERNIONS[turnID])) {
         face.quaternion.rotateTowards(TURN_QUATERNIONS[turnID], animationSpeed);
-    } else if (face.quaternion.equals(TURN_QUATERNIONS[turnID])) {
+    } else {
         turnFinisher();
     }
 }
@@ -440,3 +402,6 @@ function turnFinisher() {
         scene.add(subCubes[i]);
     }
 }
+
+//////////
+animationLoop();

@@ -1,9 +1,9 @@
 export var BASE_CLR = 0x000000,
-    R_CLR = 0xff0000,
-    L_CLR = 0xff8700,
+    R_CLR = 0xd10000,
+    L_CLR = 0xef6600,
     U_CLR = 0xffffff,
-    D_CLR = 0xffff00,
-    F_CLR = 0x00aa00,
+    D_CLR = 0xf5f500,
+    F_CLR = 0x007000,
     B_CLR = 0x0000ff,
     COORD = 10,
     SCALE = 10;
