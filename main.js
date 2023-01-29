@@ -33,7 +33,7 @@ renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
 // ~~ CAMERA AND LIGHTING ~~
 const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 150);
-camera.position.set(25, 35, 35);
+camera.position.set(30, 35, 40);
 // camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
 // scene.add(camera);
 // scene.add(new THREE.AmbientLight(0xaaaaaa));
@@ -369,6 +369,9 @@ function turnStarter(id) {
     turnID = id;
     face = new THREE.Group();
     // console.log(`turnID: ${turnID}`);
+    // let turnSound = new Audio("./turnSound.mp3");
+    // turnSound.volume = 0.5;
+    // turnSound.play();
 
     for (let i of allFaceIndices(turnID)) {
         face.add(subCubes[i]);
@@ -389,7 +392,6 @@ function turnFinisher() {
     isTurningActive = false;
     scene.remove(face);
     FINISHERS[turnID]();
-    // new Audio("./turnSound.mp3").play();
 
     if (!undoRequest && !redoRequest) {
         completedMoves.push(turnID);

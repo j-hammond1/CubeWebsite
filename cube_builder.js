@@ -230,7 +230,6 @@ function createSubCube(coords, colors, textures) {
                 color: colors[i],
                 map: textures[i],
                 // transparent: true,
-                // opacity: 0.5,
                 // side: THREE.BackSide,
             });
         } else {
@@ -243,7 +242,7 @@ function createSubCube(coords, colors, textures) {
         }
     }
 
-    const subCubeGeometry = new RoundedBoxGeometry(SCALE, SCALE, SCALE, 6, 0.85);
+    const subCubeGeometry = new RoundedBoxGeometry(SCALE, SCALE, SCALE, 6, 0.75);
     const subCubeMesh = new THREE.Mesh(subCubeGeometry, subCubeMaterials);
     subCubeMesh.name = `subCube#${subCubeID++}`;
     subCubeMesh.position.set(coords[0], coords[1], coords[2]);
