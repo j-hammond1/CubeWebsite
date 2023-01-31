@@ -10,6 +10,7 @@ export function getSubCubeWorldDirection(cubeId) {
     let dirVectorArr = [dirVector.x, dirVector.y, dirVector.z];
     let dirVectorRounded = dirVectorArr.map((coord) => Math.round(coord));
     return dirVectorRounded;
+    console.log();
 }
 
 export function alignWhiteCenterMove() {
