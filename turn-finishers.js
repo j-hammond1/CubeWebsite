@@ -1,6 +1,6 @@
 import * as THREE from "threejs";
-import { subCubes } from "./cube_builder.js";
-import { allFaceIndices } from "./turning_data.js";
+import { subCubes } from "./cube-builder.js";
+import { allFaceIndices, TURN_QUATERNIONS } from "./turning-data.js";
 
 export const FINISHERS = [
     finishU,
@@ -69,6 +69,12 @@ function updateSubCubeRotations(id, vector, radians) {
     }
 }
 
+// function updateSubCubeQuaternion(id, quaternion) {
+//     for (let i of allFaceIndices(id)) {
+//         subCubes[i].applyQuaternion(quaternion);
+//     }
+// }
+
 function updateSubCubeIndices(c, e) {
     // corners
     var temp = subCubes[c[0]];
@@ -103,6 +109,7 @@ function finishU() {
     translateX(subCubes[5], -10);
     translateZ(subCubes[5], 10);
 
+    // updateSubCubeQuaternion(0, TURN_QUATERNIONS[0]);
     updateSubCubeRotations(0, [0, 1, 0], Math.PI / -2);
     updateSubCubeIndices([0, 6, 8, 2], [1, 3, 7, 5]);
 }
@@ -139,6 +146,7 @@ function finishE() {
 
     translateZ(subCubes[17], -20);
 
+    // updateSubCubeQuaternion(3, TURN_QUATERNIONS[3]);
     updateSubCubeRotations(3, [0, 1, 0], Math.PI / 2);
     updateSubCubeIndices([15, 9, 11, 17], [16, 12, 10, 14]);
 }
@@ -172,6 +180,7 @@ function finishD() {
     translateX(subCubes[23], -10);
     translateZ(subCubes[23], -10);
 
+    // updateSubCubeQuaternion(6, TURN_QUATERNIONS[6]);
     updateSubCubeRotations(6, [0, 1, 0], Math.PI / 2);
     updateSubCubeIndices([24, 18, 20, 26], [25, 21, 19, 23]);
 }
@@ -205,6 +214,7 @@ function finishF() {
     translateX(subCubes[17], -10);
     translateY(subCubes[17], -10);
 
+    // updateSubCubeQuaternion(9, TURN_QUATERNIONS[9]);
     updateSubCubeRotations(9, [0, 0, 1], Math.PI / -2);
     updateSubCubeIndices([6, 24, 26, 8], [7, 15, 25, 17]);
 }
@@ -241,6 +251,7 @@ function finishS() {
 
     translateX(subCubes[23], -20);
 
+    // updateSubCubeQuaternion(12, TURN_QUATERNIONS[12]);
     updateSubCubeRotations(12, [0, 0, 1], Math.PI / -2);
     updateSubCubeIndices([3, 21, 23, 5], [4, 12, 22, 14]);
 }
@@ -274,6 +285,7 @@ function finishB() {
     translateX(subCubes[9], 10);
     translateY(subCubes[9], -10);
 
+    // updateSubCubeQuaternion(15, TURN_QUATERNIONS[15]);
     updateSubCubeRotations(15, [0, 0, 1], Math.PI / 2);
     updateSubCubeIndices([2, 20, 18, 0], [1, 11, 19, 9]);
 }
@@ -307,6 +319,7 @@ function finishR() {
     translateZ(subCubes[11], 10);
     translateY(subCubes[11], -10);
 
+    // updateSubCubeQuaternion(18, TURN_QUATERNIONS[18]);
     updateSubCubeRotations(18, [1, 0, 0], Math.PI / -2);
     updateSubCubeIndices([8, 26, 20, 2], [5, 17, 23, 11]);
 }
@@ -343,6 +356,7 @@ function finishM() {
 
     translateZ(subCubes[25], -20);
 
+    // updateSubCubeQuaternion(21, TURN_QUATERNIONS[21]);
     updateSubCubeRotations(21, [1, 0, 0], Math.PI / 2);
     updateSubCubeIndices([1, 19, 25, 7], [4, 10, 22, 16]);
 }
@@ -376,6 +390,7 @@ function finishL() {
     translateZ(subCubes[15], -10);
     translateY(subCubes[15], -10);
 
+    // updateSubCubeQuaternion(24, TURN_QUATERNIONS[24]);
     updateSubCubeRotations(24, [1, 0, 0], Math.PI / 2);
     updateSubCubeIndices([0, 18, 24, 6], [3, 9, 21, 15]);
 }
@@ -442,18 +457,18 @@ function finishZ2() {
     finishZ();
 }
 ////
-function finish_u() {
-    finishU();
-    finishEPrime();
-}
+// function finish_u() {
+//     finishU();
+//     finishEPrime();
+// }
 
-function finish_uPrime() {
-    finish_u();
-    finish_u();
-    finish_u();
-}
+// function finish_uPrime() {
+//     finish_u();
+//     finish_u();
+//     finish_u();
+// }
 
-function finish_u2() {
-    finish_u();
-    finish_u();
-}
+// function finish_u2() {
+//     finish_u();
+//     finish_u();
+// }

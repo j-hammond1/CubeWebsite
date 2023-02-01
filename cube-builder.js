@@ -1,17 +1,5 @@
 import * as THREE from "threejs";
 import { RoundedBoxGeometry } from "RoundedBoxGeometry";
-
-import {
-    BASE_CLR,
-    R_CLR,
-    L_CLR,
-    U_CLR,
-    D_CLR,
-    F_CLR,
-    B_CLR,
-    COORD,
-    SCALE,
-} from "./cube_builder_data.js";
 import {
     txtrs,
     initBlankModel,
@@ -27,10 +15,37 @@ import {
     initCheckeredModel,
     initChromecastImgsModel,
     initVideoModel,
-} from "./cube_models.js";
+} from "./cube-models.js";
 
-export const subCubes = [];
-var subCubeID = 0;
+let BASE_CLR = 0x000000;
+let R_CLR = 0xd10000;
+let L_CLR = 0xef6600;
+let U_CLR = 0xffffff;
+let D_CLR = 0xf5f500;
+let F_CLR = 0x007000;
+let B_CLR = 0x0000ff;
+const COORD = 10;
+const SCALE = 10;
+let subCubeID = 0;
+
+export function setR_CLR(c) {
+    R_CLR = c;
+}
+export function setL_CLR(c) {
+    L_CLR = c;
+}
+export function setU_CLR(c) {
+    U_CLR = c;
+}
+export function setD_CLR(c) {
+    D_CLR = c;
+}
+export function setF_CLR(c) {
+    F_CLR = c;
+}
+export function setB_CLR(c) {
+    B_CLR = c;
+}
 
 export function resetCube() {
     subCubes.length = 0;
@@ -38,13 +53,15 @@ export function resetCube() {
     initCube();
 }
 
+export const subCubes = [];
+
 // initBlankModel();
 // initGrayscaleModel();
 // initStickerlessModel();
-initStickeredModel();
+// initStickeredModel();
 // initSpeedcubeModel();
 // initBLDModel();
-// initDebugModel1();
+initDebugModel1();
 // initDebugModel2();
 // initEarthModel();
 // initRoseModel();

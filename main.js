@@ -2,9 +2,9 @@ import * as THREE from "threejs";
 import { OrbitControls } from "OrbitControls";
 import Stats from "Stats";
 
-import { subCubes, resetCube } from "./cube_builder.js";
-import { POSSIBLE_MOVES, TURN_QUATERNIONS, allFaceIndices } from "./turning_data.js";
-import { FINISHERS } from "./turn_finishers.js";
+import { subCubes, resetCube } from "./cube-builder.js";
+import { POSSIBLE_MOVES, TURN_QUATERNIONS, allFaceIndices } from "./turning-data.js";
+import { FINISHERS } from "./turn-finishers.js";
 import {
     HITBOXES,
     U_TRACK,
@@ -17,6 +17,18 @@ import {
     M_TRACK,
     L_TRACK,
 } from "./hitboxes.js";
+import {
+    getSubCubeIndex,
+    getSubCubeWorldDirection,
+    alignWhiteCenterMove,
+    alignBlueCenterMove,
+    getSubCube1Solution,
+    getSubCube3Solution,
+    getSubCube5Solution,
+    getSubCube7Solution,
+    determineOLLCase,
+    createSubCubeWorldDirVector,
+} from "./cube-solver.js";
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
@@ -39,8 +51,8 @@ camera.position.set(30, 35, 40);
 // scene.add(new THREE.AmbientLight(0xaaaaaa));
 scene.add(new THREE.AmbientLight(0xffffff));
 
-// // ~~ AXES HELPER ~~
-// scene.add(new THREE.AxesHelper(30));
+// ~~ AXES HELPER ~~
+scene.add(new THREE.AxesHelper(30));
 
 // // ~~ TRACK BOUNDARIES HELPER~~
 // const track_boundaries = new THREE.Line(
@@ -233,6 +245,93 @@ function documentKeyDown(event) {
     if (event.key === "`") {
         console.log("debug key pressed");
         // console.log("subcubes:", subCubes);
+        // for (let i = 18; i <= 26; i++) {
+        //     let dirVector = getSubCubeWorldDirection(i);
+        //     console.log(dirVector);
+        //     // let meshCenter = subCubes[getSubCubeIndex(i)].position;
+        //     // let dirVectorEnd =
+        //     //     dirVector.x == 1
+        //     //         ? new THREE.Vector3(meshCenter.x + 30, meshCenter.y, meshCenter.z)
+        //     //         : dirVector.x == -1
+        //     //         ? new THREE.Vector3(meshCenter.x + -30, meshCenter.y, meshCenter.z)
+        //     //         : dirVector.y == 1
+        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y + 30, meshCenter.z)
+        //     //         : dirVector.y == -1
+        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y + -30, meshCenter.z)
+        //     //         : dirVector.z == 1
+        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y, meshCenter.z + 30)
+        //     //         : dirVector.z == -1
+        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y, meshCenter.z + -30)
+        //     //         : console.log("something went wrong...");
+        //     // const subCubeWorldDirVector = new THREE.Line(
+        //     //     new THREE.BufferGeometry().setFromPoints([meshCenter, dirVectorEnd]),
+        //     //     new THREE.LineBasicMaterial({
+        //     //         color: i <= 18 ? 0x0000ff : i <= 23 ? 0xff00ff : 0x007000,
+        //     //     })
+        //     // );
+        //     // scene.add(subCubeWorldDirVector);
+        //     // console.log(
+        //     //     `${i} dirVector:`,
+        //     //     dirVector,
+        //     //     "meshCenter:",
+        //     //     meshCenter,
+        //     //     "dirVectorEnd:",
+        //     //     dirVectorEnd
+        //     // );
+        // }
+        // console.log(getSubCubeWorldDirection(25));
+        // console.log("subCube19 UP:", isSubCube19FacingUp());
+        // console.log("subCube21 UP:", isSubCube21FacingUp());
+        // console.log("subCube23 UP:", isSubCube23FacingUp());
+        // console.log("subCube25 UP:", isSubCube25FacingUp());
+
+        // determineOLLEdgeCase();
+        determineOLLCase();
+        // console.log(getSubCubeWorldDirection(26));
+        // scene.add(createSubCubeWorldDirVector(26));
+
+        // console.log("cube18Dir:", subCube18Direction());
+        // console.log("cube20Dir:", subCube20Direction());
+        // console.log("cube24Dir:", subCube24Direction());
+        // console.log("cube26Dir:", subCube26Direction());
+
+        // {
+        //     let solutionMoves = [];
+
+        //     function addMovesToSolution(moves) {
+        //         if (Array.isArray(moves) && moves !== null) {
+        //             solutionMoves.push(...moves);
+        //             moves.forEach((move) => FINISHERS[POSSIBLE_MOVES.indexOf(move)]());
+        //         } else if (!Array.isArray(moves) && moves !== null) {
+        //             solutionMoves.push(moves);
+        //             FINISHERS[POSSIBLE_MOVES.indexOf(moves)]();
+        //         }
+        //     }
+
+        //     addMovesToSolution(alignWhiteCenterMove());
+        //     addMovesToSolution(alignBlueCenterMove());
+
+        //     addMovesToSolution(getSubCube1Solution());
+        //     addMovesToSolution(getSubCube3Solution());
+        //     addMovesToSolution(getSubCube5Solution());
+        //     addMovesToSolution(getSubCube7Solution());
+
+        //     // ~~~ REVERSE CROSS SOLUTION MOVES ~~~
+        //     let moveIDs = [];
+        //     for (let i of [...solutionMoves].reverse()) {
+        //         let move = POSSIBLE_MOVES.indexOf(i);
+        //         moveIDs.push(move % 3 == 0 ? move + 1 : move % 3 == 1 ? move - 1 : move);
+        //     }
+        //     moveIDs.forEach((id) => FINISHERS[id]());
+
+        //     console.log(`solutionMoves: ${solutionMoves.toString().replaceAll(",", " ")}`);
+
+        //     turnList.push(...solutionMoves.map((move) => POSSIBLE_MOVES.indexOf(move)));
+        //     console.log("turnList:", turnList);
+        //     doTurnsFromList = true;
+        // }
+
+        // console.log("subcube7:", getSubCubeWorldDirection(7));
         // console.log("scene children:", scene.children);
         // console.log("completed:", completedMoves);
         // console.log("undone:", undoneMoves);
@@ -368,7 +467,7 @@ let face;
 function turnStarter(id) {
     turnID = id;
     face = new THREE.Group();
-    // console.log(`turnID: ${turnID}`);
+    console.log(`turnID: ${turnID}`);
     // let turnSound = new Audio("./turnSound.mp3");
     // turnSound.volume = 0.5;
     // turnSound.play();

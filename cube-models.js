@@ -1,25 +1,51 @@
 import * as THREE from "threejs";
-import {
-    CORNER_INDICES,
-    CENTER_INDICES,
-    EDGE_DOWN_INDICES,
-    EDGE_UP_INDICES,
-    EDGE_RIGHT_INDICES,
-    EDGE_LEFT_INDICES,
-    R_INDICES,
-    L_INDICES,
-    U_INDICES,
-    D_INDICES,
-    F_INDICES,
-    B_INDICES,
-    SUBCUBE_STICKER_INDICES,
-    setR_CLR,
-    setL_CLR,
-    setU_CLR,
-    setD_CLR,
-    setF_CLR,
-    setB_CLR,
-} from "./cube_builder_data.js";
+import { setR_CLR, setL_CLR, setU_CLR, setD_CLR, setF_CLR, setB_CLR } from "./cube-builder.js";
+
+const EDGE_DOWN_INDICES = [1, 10, 19, 28, 37, 46];
+const EDGE_UP_INDICES = [7, 16, 25, 34, 43, 52];
+const EDGE_RIGHT_INDICES = [3, 12, 21, 30, 39, 48];
+const EDGE_LEFT_INDICES = [5, 14, 23, 32, 41, 50];
+const CENTER_INDICES = [4, 13, 22, 31, 40, 49];
+const CORNER_INDICES = [
+    0, 2, 6, 8, 9, 11, 15, 17, 18, 20, 24, 26, 27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53,
+];
+
+const R_INDICES = [36, 37, 38, 39, 40, 41, 42, 43, 44];
+const L_INDICES = [18, 19, 20, 21, 22, 23, 24, 25, 26];
+const U_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const D_INDICES = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+const F_INDICES = [27, 28, 29, 30, 31, 32, 33, 34, 35];
+const B_INDICES = [45, 46, 47, 48, 49, 50, 51, 52, 53];
+
+const SUBCUBE_STICKER_INDICES = [
+    [0, 18, 47],
+    [1, 46],
+    [2, 38, 45],
+    [3, 19],
+    [4],
+    [5, 37],
+    [6, 20, 27],
+    [7, 28],
+    [8, 29, 36],
+    [21, 50],
+    [49],
+    [41, 48],
+    [22],
+    [null],
+    [40],
+    [23, 30],
+    [31],
+    [32, 39],
+    [15, 24, 53],
+    [16, 52],
+    [17, 44, 51],
+    [12, 25],
+    [13],
+    [14, 43],
+    [9, 26, 33],
+    [10, 34],
+    [11, 35, 42],
+];
 
 export var txtrs = new Array(54);
 const LOADER = new THREE.TextureLoader();
