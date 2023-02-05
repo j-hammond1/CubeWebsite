@@ -1,55 +1,86 @@
 import * as THREE from "threejs";
 import { subCubes } from "./cube-builder.js";
-import { allFaceIndices, TURN_QUATERNIONS } from "./turning-data.js";
+import { allFaceIndices, turnQuaternions } from "./turning-data.js";
+
+/* 
+test:
+ U U' U2 E E' E2 D D' D2 F F' F2 S S' S2 B B' B2 R R' R2 M M' M2 L L' L2
+ x x' x2 y y' y2 z z' z2
+ u u' u2 d d' d2 f f' f2 b b' b2 r r' r2 l l' l2
+*/
 
 export const FINISHERS = [
-    finishU,
-    finishUPrime,
-    finishU2,
+    UTurn,
+    UPrimeTurn,
+    U2Turn,
 
-    finishE,
-    finishEPrime,
-    finishE2,
+    ETurn,
+    EPrimeTurn,
+    E2Turn,
 
-    finishD,
-    finishDPrime,
-    finishD2,
+    DTurn,
+    DPrimeTurn,
+    D2Turn,
 
-    finishF,
-    finishFPrime,
-    finishF2,
+    FTurn,
+    FPrimeTurn,
+    F2Turn,
 
-    finishS,
-    finishSPrime,
-    finishS2,
+    STurn,
+    SPrimeTurn,
+    S2Turn,
 
-    finishB,
-    finishBPrime,
-    finishB2,
+    BTurn,
+    BPrimeTurn,
+    B2Turn,
 
-    finishR,
-    finishRPrime,
-    finishR2,
+    RTurn,
+    RPrimeTurn,
+    R2Turn,
 
-    finishM,
-    finishMPrime,
-    finishM2,
+    MTurn,
+    MPrimeTurn,
+    M2Turn,
 
-    finishL,
-    finishLPrime,
-    finishL2,
+    LTurn,
+    LPrimeTurn,
+    L2Turn,
 
-    finishX,
-    finishXPrime,
-    finishX2,
+    xTurn,
+    xPrimeTurn,
+    x2Turn,
 
-    finishY,
-    finishYPrime,
-    finishY2,
+    yTurn,
+    yPrimeTurn,
+    y2Turn,
 
-    finishZ,
-    finishZPrime,
-    finishZ2,
+    zTurn,
+    zPrimeTurn,
+    z2Turn,
+
+    uTurn,
+    uPrimeTurn,
+    u2Turn,
+
+    dTurn,
+    dPrimeTurn,
+    d2Turn,
+
+    fTurn,
+    fPrimeTurn,
+    f2Turn,
+
+    bTurn,
+    bPrimeTurn,
+    b2Turn,
+
+    rTurn,
+    rPrimeTurn,
+    r2Turn,
+
+    lTurn,
+    lPrimeTurn,
+    l2Turn,
 ];
 
 function translateX(subCube, amt) {
@@ -91,7 +122,7 @@ function updateSubCubeIndices(c, e) {
     subCubes[e[3]] = temp;
 }
 ////
-function finishU() {
+function UTurn() {
     translateX(subCubes[0], 20);
     translateZ(subCubes[6], -20);
     translateX(subCubes[8], -20);
@@ -114,18 +145,18 @@ function finishU() {
     updateSubCubeIndices([0, 6, 8, 2], [1, 3, 7, 5]);
 }
 
-function finishUPrime() {
-    finishU();
-    finishU();
-    finishU();
+function UPrimeTurn() {
+    UTurn();
+    UTurn();
+    UTurn();
 }
 
-function finishU2() {
-    finishU();
-    finishU();
+function U2Turn() {
+    UTurn();
+    UTurn();
 }
 ////
-function finishE() {
+function ETurn() {
     translateZ(subCubes[9], 20);
 
     translateX(subCubes[10], -10);
@@ -151,18 +182,18 @@ function finishE() {
     updateSubCubeIndices([15, 9, 11, 17], [16, 12, 10, 14]);
 }
 
-function finishEPrime() {
-    finishE();
-    finishE();
-    finishE();
+function EPrimeTurn() {
+    ETurn();
+    ETurn();
+    ETurn();
 }
 
-function finishE2() {
-    finishE();
-    finishE();
+function E2Turn() {
+    ETurn();
+    ETurn();
 }
 ////
-function finishD() {
+function DTurn() {
     translateX(subCubes[24], 20);
     translateZ(subCubes[18], 20);
     translateX(subCubes[20], -20);
@@ -185,18 +216,18 @@ function finishD() {
     updateSubCubeIndices([24, 18, 20, 26], [25, 21, 19, 23]);
 }
 
-function finishDPrime() {
-    finishD();
-    finishD();
-    finishD();
+function DPrimeTurn() {
+    DTurn();
+    DTurn();
+    DTurn();
 }
 
-function finishD2() {
-    finishD();
-    finishD();
+function D2Turn() {
+    DTurn();
+    DTurn();
 }
 ////
-function finishF() {
+function FTurn() {
     translateX(subCubes[6], 20);
     translateY(subCubes[24], 20);
     translateX(subCubes[26], -20);
@@ -219,18 +250,18 @@ function finishF() {
     updateSubCubeIndices([6, 24, 26, 8], [7, 15, 25, 17]);
 }
 
-function finishFPrime() {
-    finishF();
-    finishF();
-    finishF();
+function FPrimeTurn() {
+    FTurn();
+    FTurn();
+    FTurn();
 }
 
-function finishF2() {
-    finishF();
-    finishF();
+function F2Turn() {
+    FTurn();
+    FTurn();
 }
 ////
-function finishS() {
+function STurn() {
     translateX(subCubes[3], 20);
 
     translateX(subCubes[4], 10);
@@ -256,18 +287,18 @@ function finishS() {
     updateSubCubeIndices([3, 21, 23, 5], [4, 12, 22, 14]);
 }
 
-function finishSPrime() {
-    finishS();
-    finishS();
-    finishS();
+function SPrimeTurn() {
+    STurn();
+    STurn();
+    STurn();
 }
 
-function finishS2() {
-    finishS();
-    finishS();
+function S2Turn() {
+    STurn();
+    STurn();
 }
 ////
-function finishB() {
+function BTurn() {
     translateX(subCubes[2], -20);
     translateY(subCubes[20], 20);
     translateX(subCubes[18], 20);
@@ -290,18 +321,18 @@ function finishB() {
     updateSubCubeIndices([2, 20, 18, 0], [1, 11, 19, 9]);
 }
 
-function finishBPrime() {
-    finishB();
-    finishB();
-    finishB();
+function BPrimeTurn() {
+    BTurn();
+    BTurn();
+    BTurn();
 }
 
-function finishB2() {
-    finishB();
-    finishB();
+function B2Turn() {
+    BTurn();
+    BTurn();
 }
 ////
-function finishR() {
+function RTurn() {
     translateZ(subCubes[8], -20);
     translateY(subCubes[26], 20);
     translateZ(subCubes[20], 20);
@@ -324,18 +355,18 @@ function finishR() {
     updateSubCubeIndices([8, 26, 20, 2], [5, 17, 23, 11]);
 }
 
-function finishRPrime() {
-    finishR();
-    finishR();
-    finishR();
+function RPrimeTurn() {
+    RTurn();
+    RTurn();
+    RTurn();
 }
 
-function finishR2() {
-    finishR();
-    finishR();
+function R2Turn() {
+    RTurn();
+    RTurn();
 }
 ////
-function finishM() {
+function MTurn() {
     translateZ(subCubes[1], 20);
 
     translateZ(subCubes[4], 10);
@@ -361,18 +392,18 @@ function finishM() {
     updateSubCubeIndices([1, 19, 25, 7], [4, 10, 22, 16]);
 }
 
-function finishMPrime() {
-    finishM();
-    finishM();
-    finishM();
+function MPrimeTurn() {
+    MTurn();
+    MTurn();
+    MTurn();
 }
 
-function finishM2() {
-    finishM();
-    finishM();
+function M2Turn() {
+    MTurn();
+    MTurn();
 }
 ////
-function finishL() {
+function LTurn() {
     translateZ(subCubes[0], 20);
     translateY(subCubes[18], 20);
     translateZ(subCubes[24], -20);
@@ -395,80 +426,160 @@ function finishL() {
     updateSubCubeIndices([0, 18, 24, 6], [3, 9, 21, 15]);
 }
 
-function finishLPrime() {
-    finishL();
-    finishL();
-    finishL();
+function LPrimeTurn() {
+    LTurn();
+    LTurn();
+    LTurn();
 }
 
-function finishL2() {
-    finishL();
-    finishL();
+function L2Turn() {
+    LTurn();
+    LTurn();
 }
 ////
-function finishX() {
-    finishR();
-    finishMPrime();
-    finishLPrime();
+function xTurn() {
+    RTurn();
+    MPrimeTurn();
+    LPrimeTurn();
 }
 
-function finishXPrime() {
-    finishX();
-    finishX();
-    finishX();
+function xPrimeTurn() {
+    xTurn();
+    xTurn();
+    xTurn();
 }
 
-function finishX2() {
-    finishX();
-    finishX();
+function x2Turn() {
+    xTurn();
+    xTurn();
 }
 ////
-function finishY() {
-    finishU();
-    finishEPrime();
-    finishDPrime();
+function yTurn() {
+    UTurn();
+    EPrimeTurn();
+    DPrimeTurn();
 }
 
-function finishYPrime() {
-    finishY();
-    finishY();
-    finishY();
+function yPrimeTurn() {
+    yTurn();
+    yTurn();
+    yTurn();
 }
 
-function finishY2() {
-    finishY();
-    finishY();
-}
-////
-function finishZ() {
-    finishF();
-    finishS();
-    finishBPrime();
-}
-
-function finishZPrime() {
-    finishZ();
-    finishZ();
-    finishZ();
-}
-
-function finishZ2() {
-    finishZ();
-    finishZ();
+function y2Turn() {
+    yTurn();
+    yTurn();
 }
 ////
-// function finish_u() {
-//     finishU();
-//     finishEPrime();
-// }
+function zTurn() {
+    FTurn();
+    STurn();
+    BPrimeTurn();
+}
 
-// function finish_uPrime() {
-//     finish_u();
-//     finish_u();
-//     finish_u();
-// }
+function zPrimeTurn() {
+    zTurn();
+    zTurn();
+    zTurn();
+}
 
-// function finish_u2() {
-//     finish_u();
-//     finish_u();
-// }
+function z2Turn() {
+    zTurn();
+    zTurn();
+}
+////
+function uTurn() {
+    UTurn();
+    EPrimeTurn();
+}
+
+function uPrimeTurn() {
+    uTurn();
+    uTurn();
+    uTurn();
+}
+
+function u2Turn() {
+    uTurn();
+    uTurn();
+}
+////
+function dTurn() {
+    DTurn();
+    ETurn();
+}
+
+function dPrimeTurn() {
+    dTurn();
+    dTurn();
+    dTurn();
+}
+
+function d2Turn() {
+    dTurn();
+    dTurn();
+}
+////
+function fTurn() {
+    FTurn();
+    STurn();
+}
+
+function fPrimeTurn() {
+    fTurn();
+    fTurn();
+    fTurn();
+}
+
+function f2Turn() {
+    fTurn();
+    fTurn();
+}
+////
+function bTurn() {
+    BTurn();
+    SPrimeTurn();
+}
+
+function bPrimeTurn() {
+    bTurn();
+    bTurn();
+    bTurn();
+}
+
+function b2Turn() {
+    bTurn();
+    bTurn();
+}
+////
+function rTurn() {
+    RTurn();
+    MPrimeTurn();
+}
+
+function rPrimeTurn() {
+    rTurn();
+    rTurn();
+    rTurn();
+}
+
+function r2Turn() {
+    rTurn();
+    rTurn();
+}
+////
+function lTurn() {
+    LTurn();
+    MTurn();
+}
+
+function lPrimeTurn() {
+    lTurn();
+    lTurn();
+    lTurn();
+}
+
+function l2Turn() {
+    lTurn();
+    lTurn();
+}

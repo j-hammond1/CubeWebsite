@@ -3,7 +3,7 @@ import { OrbitControls } from "OrbitControls";
 import Stats from "Stats";
 
 import { subCubes, resetCube } from "./cube-builder.js";
-import { POSSIBLE_MOVES, TURN_QUATERNIONS, allFaceIndices } from "./turning-data.js";
+import { POSSIBLE_MOVES, turnQuaternions, allFaceIndices } from "./turning-data.js";
 import { FINISHERS } from "./turn-finishers.js";
 import {
     HITBOXES,
@@ -17,18 +17,17 @@ import {
     M_TRACK,
     L_TRACK,
 } from "./hitboxes.js";
+import { getSubCubeWorldDirection, getSubCubeIndex } from "./solver/cube-solver.js";
+import { getOLLAlgorithm } from "./solver/OLL-detection.js";
+import { getLLSubCubePositions } from "./solver/PLL-detection.js";
 import {
-    getSubCubeIndex,
-    getSubCubeWorldDirection,
     alignWhiteCenterMove,
     alignBlueCenterMove,
     getSubCube1Solution,
     getSubCube3Solution,
     getSubCube5Solution,
     getSubCube7Solution,
-    determineOLLCase,
-    createSubCubeWorldDirVector,
-} from "./cube-solver.js";
+} from "./solver/cross-solution.js";
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
@@ -51,8 +50,8 @@ camera.position.set(30, 35, 40);
 // scene.add(new THREE.AmbientLight(0xaaaaaa));
 scene.add(new THREE.AmbientLight(0xffffff));
 
-// ~~ AXES HELPER ~~
-scene.add(new THREE.AxesHelper(30));
+// // ~~ AXES HELPER ~~
+// scene.add(new THREE.AxesHelper(30));
 
 // // ~~ TRACK BOUNDARIES HELPER~~
 // const track_boundaries = new THREE.Line(
@@ -66,6 +65,19 @@ scene.add(new THREE.AxesHelper(30));
 //     new THREE.LineBasicMaterial({ color: 0xff00ff })
 // );
 // scene.add(track_boundaries);
+
+// // ~~ SHOW U FACE LETTER ~~
+// const planeMesh = new THREE.Mesh(
+//     new THREE.PlaneGeometry(20, 20),
+//     new THREE.MeshBasicMaterial({
+//         side: THREE.DoubleSide,
+//         transparent: true,
+//         map: new THREE.TextureLoader().load("./images/stickers/letters/U.png"),
+//     })
+// );
+// planeMesh.position.set(0, 20, 0);
+// planeMesh.rotation.set(Math.PI / 2, 0, Math.PI);
+// scene.add(planeMesh);
 
 // ~~ STATS ~~
 const stats = Stats();
@@ -109,8 +121,13 @@ function animationLoop() {
 let turnList = [];
 let doTurnsFromList = false;
 function turnsFromList() {
-    if (!isTurningActive) {
+    if (doAnimation && !isTurningActive) {
         turnList.length != 0 ? turnStarter(turnList.shift()) : (doTurnsFromList = false);
+    }
+    if (!doAnimation) {
+        doTurnsFromList = false;
+        turnList.forEach((move) => turnStarter(move));
+        turnList = [];
     }
 }
 
@@ -125,20 +142,107 @@ document.getElementById("menu-toggle").onclick = () => {
 
 // ~~ TEXTAREA MOVE INPUT ~~
 const moveInput = document.getElementById("move-input");
-moveInput.oninput = () => {
-    if (moveInput.value.includes("\n")) {
-        let input = moveInput.value;
-        moveInput.value = "";
-        moveInput.placeholder = input;
+const validMoves = /[UEDFSBRMLudfbrlxyz]/;
+const validModifiers = /['2]/;
+let lastInput = [];
 
-        for (let i of input.trim().split(" ")) {
-            if (/^[uedfsbrmlxyz]['2]$|^[uedfsbrmlxyz]$/i.test(i)) {
-                turnList.push(POSSIBLE_MOVES.indexOf(i));
+function getFilteredMoveInput(inputArr) {
+    // TEST: U'DexE2/'EE"@@f2'M'?
+    let moves = [];
+    inputArr.forEach((value, indx) => {
+        if (validMoves.test(value)) {
+            let indxOfValidMove = inputArr.indexOf(value, indx);
+            let charAfterValidMove = inputArr[indxOfValidMove + 1];
+
+            if (validModifiers.test(charAfterValidMove)) {
+                let modifiedMoveStr = value + charAfterValidMove;
+                moves.push(modifiedMoveStr);
+            } else {
+                moves.push(value);
             }
         }
+    });
+    return moves;
+}
+
+document.getElementById("submit").onclick = () => {
+    if (!isTurningActive) {
+        let inputArr = moveInput.value.split("");
+        let moves = getFilteredMoveInput(inputArr);
+
+        console.log(moves);
+        moveInput.placeholder = `INPUT:\n{${inputArr.join("")}}\n\nMOVES:\n{${moves.join(" ")}}`;
+        moveInput.value = "";
+
+        for (let i of moves) {
+            turnList.push(POSSIBLE_MOVES.indexOf(i));
+        }
+
+        lastInput = [];
+        lastInput.push(...turnList);
+
         console.log("turnList:", turnList);
         doTurnsFromList = true;
     }
+};
+
+document.getElementById("repeat-last-input").onclick = () => {
+    turnList.push(...lastInput);
+    console.log("turnList:", turnList);
+    doTurnsFromList = true;
+};
+
+// ~~ MIRROR X-AXIS ~~
+document.getElementById("mirror-x-axis").onclick = () => {
+    console.log("mirroring across x-axis");
+    let moves = getFilteredMoveInput(moveInput.value.split(""));
+    console.log(moves);
+    let mirroredMoves = [];
+    for (let i of moves) {
+        switch (i) {
+        }
+    }
+};
+
+// ~~ MIRROR Y-AXIS ~~
+document.getElementById("mirror-y-axis").onclick = () => {
+    console.log("mirroring across y-axis");
+    let moves = getFilteredMoveInput(moveInput.value.split(""));
+    console.log(moves);
+    let mirroredMoves = [];
+    for (let i of moves) {
+        switch (i) {
+        }
+    }
+};
+
+// ~~ MIRROR Z-AXIS ~~
+document.getElementById("mirror-z-axis").onclick = () => {
+    console.log("mirroring across z-axis");
+    let moves = getFilteredMoveInput(moveInput.value.split(""));
+    console.log(moves);
+    let mirroredMoves = [];
+    for (let i of moves) {
+        switch (i) {
+        }
+    }
+};
+
+// ~~ INVERT ~~
+document.getElementById("invert").onclick = () => {
+    console.log("inverting moves");
+    let moves = getFilteredMoveInput(moveInput.value.split(""));
+    let reversedMoves = moves.reverse();
+    let invertedMoves = [];
+
+    for (let i of reversedMoves) {
+        if (!i.includes("'") && !i.includes("2")) {
+            invertedMoves.push(i.concat("'"));
+        } else {
+            invertedMoves.push(i.replace("'", ""));
+        }
+    }
+    moveInput.value = invertedMoves.join(" ");
 };
 
 // ~~ ANIMATION SPEED SLIDER ~~
@@ -188,7 +292,8 @@ document.getElementById("scramble").onclick = () => {
         console.log(turnList);
         doTurnsFromList = true;
         let moves = turnList.map((id) => POSSIBLE_MOVES[id]);
-        moveInput.placeholder = moves.toString().replaceAll(",", " ");
+        moveInput.placeholder = moves.join(" ");
+        // console.log(moves.join(" "));
     }
 };
 
@@ -198,12 +303,14 @@ document.getElementById("reset").onclick = () => {
         console.log("resetting");
         scene.remove(...subCubes);
         resetCube();
+        scene.add(...subCubes);
         completedMoves = [];
         undoneMoves = [];
-        moveInput.placeholder = "Input some moves...";
+        lastInput = [];
+        moveInput.placeholder = "Input some moves...\nExample: U D' M2 S r l' x z2";
         animationSpeed = 0.05;
         animSpeedSlider.value = 0.05;
-        scene.add(...subCubes);
+        doAnimation = true;
     }
 };
 
@@ -239,97 +346,82 @@ document.getElementById("redo").onclick = () => {
     }
 };
 
+// ~~ TOGGLE ANIMATION ~~
+document.getElementById("toggle-animation").onclick = () => {
+    if (!isTurningActive) {
+        console.log("toggling animation");
+        doAnimation = !doAnimation;
+        if (doAnimation) {
+            document.getElementById("video-on").style.display = "none";
+            document.getElementById("video-off").style.display = "initial";
+        } else {
+            document.getElementById("video-off").style.display = "none";
+            document.getElementById("video-on").style.display = "initial";
+        }
+    }
+};
+
+// ~~ DEBUG BUTTON ~~
+document.getElementById("debug").onclick = () => {
+    if (!isTurningActive) {
+        console.log("debug button clicked");
+        let moves = ["R'", "D", "R", "F", "D", "F'", "U'", "F", "D'", "F'", "R'", "D'", "R", "U"];
+        moves.forEach((move) => FINISHERS[POSSIBLE_MOVES.indexOf(move)]());
+    }
+};
+
 // ~~ KEYBOARD INPUT ~~
 document.addEventListener("keydown", documentKeyDown);
 function documentKeyDown(event) {
     if (event.key === "`") {
-        console.log("debug key pressed");
+        console.log("debug key 1 pressed");
         // console.log("subcubes:", subCubes);
-        // for (let i = 18; i <= 26; i++) {
-        //     let dirVector = getSubCubeWorldDirection(i);
-        //     console.log(dirVector);
-        //     // let meshCenter = subCubes[getSubCubeIndex(i)].position;
-        //     // let dirVectorEnd =
-        //     //     dirVector.x == 1
-        //     //         ? new THREE.Vector3(meshCenter.x + 30, meshCenter.y, meshCenter.z)
-        //     //         : dirVector.x == -1
-        //     //         ? new THREE.Vector3(meshCenter.x + -30, meshCenter.y, meshCenter.z)
-        //     //         : dirVector.y == 1
-        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y + 30, meshCenter.z)
-        //     //         : dirVector.y == -1
-        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y + -30, meshCenter.z)
-        //     //         : dirVector.z == 1
-        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y, meshCenter.z + 30)
-        //     //         : dirVector.z == -1
-        //     //         ? new THREE.Vector3(meshCenter.x, meshCenter.y, meshCenter.z + -30)
-        //     //         : console.log("something went wrong...");
-        //     // const subCubeWorldDirVector = new THREE.Line(
-        //     //     new THREE.BufferGeometry().setFromPoints([meshCenter, dirVectorEnd]),
-        //     //     new THREE.LineBasicMaterial({
-        //     //         color: i <= 18 ? 0x0000ff : i <= 23 ? 0xff00ff : 0x007000,
-        //     //     })
-        //     // );
-        //     // scene.add(subCubeWorldDirVector);
-        //     // console.log(
-        //     //     `${i} dirVector:`,
-        //     //     dirVector,
-        //     //     "meshCenter:",
-        //     //     meshCenter,
-        //     //     "dirVectorEnd:",
-        //     //     dirVectorEnd
-        //     // );
-        // }
-        // console.log(getSubCubeWorldDirection(25));
-        // console.log("subCube19 UP:", isSubCube19FacingUp());
-        // console.log("subCube21 UP:", isSubCube21FacingUp());
-        // console.log("subCube23 UP:", isSubCube23FacingUp());
-        // console.log("subCube25 UP:", isSubCube25FacingUp());
 
-        // determineOLLEdgeCase();
-        determineOLLCase();
-        // console.log(getSubCubeWorldDirection(26));
-        // scene.add(createSubCubeWorldDirVector(26));
-
-        // console.log("cube18Dir:", subCube18Direction());
-        // console.log("cube20Dir:", subCube20Direction());
-        // console.log("cube24Dir:", subCube24Direction());
-        // console.log("cube26Dir:", subCube26Direction());
-
-        // {
-        //     let solutionMoves = [];
-
-        //     function addMovesToSolution(moves) {
-        //         if (Array.isArray(moves) && moves !== null) {
-        //             solutionMoves.push(...moves);
-        //             moves.forEach((move) => FINISHERS[POSSIBLE_MOVES.indexOf(move)]());
-        //         } else if (!Array.isArray(moves) && moves !== null) {
-        //             solutionMoves.push(moves);
-        //             FINISHERS[POSSIBLE_MOVES.indexOf(moves)]();
-        //         }
-        //     }
-
-        //     addMovesToSolution(alignWhiteCenterMove());
-        //     addMovesToSolution(alignBlueCenterMove());
-
-        //     addMovesToSolution(getSubCube1Solution());
-        //     addMovesToSolution(getSubCube3Solution());
-        //     addMovesToSolution(getSubCube5Solution());
-        //     addMovesToSolution(getSubCube7Solution());
-
-        //     // ~~~ REVERSE CROSS SOLUTION MOVES ~~~
-        //     let moveIDs = [];
-        //     for (let i of [...solutionMoves].reverse()) {
-        //         let move = POSSIBLE_MOVES.indexOf(i);
-        //         moveIDs.push(move % 3 == 0 ? move + 1 : move % 3 == 1 ? move - 1 : move);
-        //     }
-        //     moveIDs.forEach((id) => FINISHERS[id]());
-
-        //     console.log(`solutionMoves: ${solutionMoves.toString().replaceAll(",", " ")}`);
-
-        //     turnList.push(...solutionMoves.map((move) => POSSIBLE_MOVES.indexOf(move)));
+        // let OLLAlgorithm = getOLLAlgorithm();
+        // if (OLLAlgorithm !== null) {
+        //     console.log(OLLAlgorithm.join(" "));
+        //     turnList.push(...OLLAlgorithm.map((move) => POSSIBLE_MOVES.indexOf(move)));
         //     console.log("turnList:", turnList);
         //     doTurnsFromList = true;
         // }
+
+        // getLLSubCubePositions();
+
+        {
+            let solutionMoves = [];
+
+            function addMovesToSolution(moves) {
+                if (Array.isArray(moves) && moves !== null) {
+                    solutionMoves.push(...moves);
+                    moves.forEach((move) => FINISHERS[POSSIBLE_MOVES.indexOf(move)]());
+                } else if (!Array.isArray(moves) && moves !== null) {
+                    solutionMoves.push(moves);
+                    FINISHERS[POSSIBLE_MOVES.indexOf(moves)]();
+                }
+            }
+
+            addMovesToSolution(alignWhiteCenterMove());
+            addMovesToSolution(alignBlueCenterMove());
+
+            addMovesToSolution(getSubCube1Solution());
+            addMovesToSolution(getSubCube3Solution());
+            addMovesToSolution(getSubCube5Solution());
+            addMovesToSolution(getSubCube7Solution());
+
+            // ~~~ REVERSE CROSS SOLUTION MOVES ~~~
+            let moveIDs = [];
+            for (let i of [...solutionMoves].reverse()) {
+                let move = POSSIBLE_MOVES.indexOf(i);
+                moveIDs.push(move % 3 == 0 ? move + 1 : move % 3 == 1 ? move - 1 : move);
+            }
+            moveIDs.forEach((id) => FINISHERS[id]());
+
+            console.log(`solutionMoves: ${solutionMoves.toString().replaceAll(",", " ")}`);
+
+            turnList.push(...solutionMoves.map((move) => POSSIBLE_MOVES.indexOf(move)));
+            console.log("turnList:", turnList);
+            doTurnsFromList = true;
+        }
 
         // console.log("subcube7:", getSubCubeWorldDirection(7));
         // console.log("scene children:", scene.children);
@@ -339,6 +431,19 @@ function documentKeyDown(event) {
         // console.log(canvas.width, canvas.clientWidth);
         // console.log(startDrag, endDrag);
         // new Audio("./turnSound.mp3").play();
+    }
+    if (event.key === "=") {
+        console.log("debug key 2 pressed");
+        // console.log(getSubCubeWorldDirection(0));
+        // console.log(getSubCubeIndex(0));
+
+        let OLLAlgorithm = getOLLAlgorithm();
+        if (OLLAlgorithm !== null) {
+            console.log(OLLAlgorithm.join(" "));
+            turnList.push(...OLLAlgorithm.map((move) => POSSIBLE_MOVES.indexOf(move)));
+            console.log("turnList:", turnList);
+            doTurnsFromList = true;
+        }
     }
 }
 
@@ -460,36 +565,45 @@ function dragTurn(track, turnDir, turn1, turn2) {
 
 // ~~ TURNING SYSTEM ~~
 let isTurningActive = false;
+let doAnimation = true;
 let animationSpeed = 0.05;
 let turnID;
 let face;
 
 function turnStarter(id) {
     turnID = id;
-    face = new THREE.Group();
     console.log(`turnID: ${turnID}`);
-    // let turnSound = new Audio("./turnSound.mp3");
-    // turnSound.volume = 0.5;
-    // turnSound.play();
 
-    for (let i of allFaceIndices(turnID)) {
-        face.add(subCubes[i]);
+    if (doAnimation) {
+        face = new THREE.Group();
+        // let turnSound = new Audio("./turnSound.mp3").play();
+        for (let i of allFaceIndices(turnID)) {
+            face.add(subCubes[i]);
+        }
+        scene.add(face);
+        isTurningActive = true;
+    } else {
+        turnFinisher();
     }
-    scene.add(face);
-    isTurningActive = true;
 }
 
 function turn() {
-    if (!face.quaternion.equals(TURN_QUATERNIONS[turnID])) {
-        face.quaternion.rotateTowards(TURN_QUATERNIONS[turnID], animationSpeed);
+    if (!face.quaternion.equals(turnQuaternions(turnID))) {
+        face.quaternion.rotateTowards(turnQuaternions(turnID), animationSpeed);
     } else {
         turnFinisher();
     }
 }
 
 function turnFinisher() {
-    isTurningActive = false;
-    scene.remove(face);
+    if (doAnimation) {
+        isTurningActive = false;
+        scene.remove(face);
+        for (let i of allFaceIndices(turnID)) {
+            scene.add(subCubes[i]);
+        }
+    }
+
     FINISHERS[turnID]();
 
     if (!undoRequest && !redoRequest) {
@@ -498,10 +612,6 @@ function turnFinisher() {
     }
     undoRequest = false;
     redoRequest = false;
-
-    for (let i of allFaceIndices(turnID)) {
-        scene.add(subCubes[i]);
-    }
 }
 
 //////////

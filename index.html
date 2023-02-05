@@ -9,6 +9,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" />
         <link rel="icon" type="image/png" href="./images/favicons/cube_favicon_48x.png" />
         <title>JCube</title>
@@ -36,10 +37,48 @@
 
         <div id="control-menu">
             <h1 id="header">JCube</h1>
-            <textarea id="move-input" placeholder="Input some moves..."></textarea>
+            <textarea
+                id="move-input"
+                placeholder="Input some moves...&#10;Example: U D' M2 S r l' x z2"
+            ></textarea>
+
+            <div id="top-buttons">
+                <div class="control-buttons">
+                    <button class="control-button" id="submit" type="button">
+                        <i class="material-icons">check</i>
+                        <p class="button-tooltip" style="display: none">Submit</p>
+                    </button>
+
+                    <button class="control-button" id="repeat-last-input" type="button">
+                        <i class="material-icons">repeat</i>
+                        <p class="button-tooltip" style="display: none">Repeat</p>
+                    </button>
+
+                    <button class="control-button" id="mirror-x-axis" type="button">
+                        <i class="material-icons">flip</i>
+                        <p class="button-tooltip" style="display: none">Mirror (x)</p>
+                    </button>
+
+                    <button class="control-button" id="mirror-y-axis" type="button">
+                        <i class="material-icons" style="transform: rotate(90deg)">flip</i>
+                        <p class="button-tooltip" style="display: none">Mirror (y)</p>
+                    </button>
+
+                    <button class="control-button" id="mirror-z-axis" type="button">
+                        <i class="material-icons" style="transform: rotate(-45deg)">flip</i>
+                        <p class="button-tooltip" style="display: none">Mirror (z)</p>
+                    </button>
+
+                    <button class="control-button" id="invert" type="button">
+                        <i class="material-icons">invert_colors</i>
+                        <p class="button-tooltip" style="display: none">Invert Input</p>
+                    </button>
+                </div>
+            </div>
 
             <div id="slider-div">
-                <i class="fa-solid fa-stopwatch fa-2x"></i>
+                <i class="material-icons" style="font-size: 4vmin">speed</i>
+                <!-- <i class="fa-solid fa-stopwatch fa-2x"></i> -->
                 <input
                     id="anim-speed-slider"
                     type="range"
@@ -50,32 +89,46 @@
                 />
             </div>
 
-            <div class="buttons">
-                <div id="control-buttons">
+            <div id="bottom-buttons">
+                <div class="control-buttons">
                     <button class="control-button" id="scramble" type="button">
-                        <i class="fa-solid fa-shuffle fa-3x"></i>
+                        <i class="material-icons">shuffle</i>
+                        <p class="button-tooltip" style="display: none">Scramble</p>
                     </button>
+
                     <button class="control-button" id="reset" type="button">
-                        <i class="fa-solid fa-rotate fa-3x"></i>
+                        <i class="material-icons">restart_alt</i>
+                        <p class="button-tooltip" style="display: none">Reset</p>
                     </button>
+
                     <button class="control-button" id="undo" type="button">
-                        <i class="fa-solid fa-rotate-left fa-3x"></i>
+                        <i class="material-icons">undo</i>
+                        <p class="button-tooltip" style="display: none">Undo</p>
                     </button>
+
                     <button class="control-button" id="redo" type="button">
-                        <i class="fa-solid fa-rotate-right fa-3x"></i>
+                        <i class="material-icons">redo</i>
+                        <p class="button-tooltip" style="display: none">Redo</p>
+                    </button>
+
+                    <button class="control-button" id="toggle-animation" type="button">
+                        <i class="material-icons" id="video-off">videocam_off</i>
+                        <i class="material-icons" id="video-on" style="display: none">videocam</i>
+                        <p class="button-tooltip" style="display: none">Animation</p>
                     </button>
                 </div>
-
-                <!-- <div id="control-buttons">
-                    <button class="control-button" id="about" type="button">
-                        <i class="fa-solid fa-circle-info fa-3x"></i>
-                    </button>
-                </div> -->
             </div>
         </div>
-        <button id="menu-toggle" type="button">
-            <i class="fa-solid fa-bars fa-3x"></i>
-        </button>
+
+        <div id="options-box">
+            <button id="menu-toggle" type="button">
+                <i class="material-icons" style="font-size: 8vmin">menu</i>
+            </button>
+
+            <button id="debug" type="button">
+                <i class="material-icons" style="font-size: 5vmin">bug_report</i>
+            </button>
+        </div>
 
         <!-- <audio id="music" src="./ambient.mp3" loop="true"></audio>
         <script>

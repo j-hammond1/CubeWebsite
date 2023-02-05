@@ -58,10 +58,10 @@ export const subCubes = [];
 // initBlankModel();
 // initGrayscaleModel();
 // initStickerlessModel();
-// initStickeredModel();
+initStickeredModel();
 // initSpeedcubeModel();
 // initBLDModel();
-initDebugModel1();
+// initDebugModel1();
 // initDebugModel2();
 // initEarthModel();
 // initRoseModel();
@@ -247,7 +247,7 @@ function createSubCube(coords, colors, textures) {
                 color: colors[i],
                 map: textures[i],
                 // transparent: true,
-                // side: THREE.BackSide,
+                // side: THREE.DoubleSide,
             });
         } else {
             subCubeMaterials[i] = new THREE.MeshPhongMaterial({
@@ -255,6 +255,7 @@ function createSubCube(coords, colors, textures) {
                 color: colors[i],
                 // transparent: true,
                 // opacity: 0,
+                // side: THREE.BackSide,
             });
         }
     }

@@ -2,8 +2,8 @@ html,
 body {
     margin: 0;
     padding: 0;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }
 
 :focus {
@@ -53,10 +53,11 @@ body {
     background-color: rgb(50, 50, 50);
     border: none;
     resize: none;
-    padding: 0.5vmax;
+    padding: 1vmin;
     margin-top: 3vh;
-    margin-bottom: auto;
-    font-size: xx-large;
+    /* margin-bottom: auto; */
+    /* font-size: xx-large; */
+    font-size: 4vmin;
     font-family: "Rubik", sans-serif;
     color: white;
     border-radius: 0.5rem;
@@ -93,29 +94,35 @@ body {
     border-radius: 1rem;
 }
 
-.buttons {
-    /* height: 20%; */
-    height: 13%;
+#top-buttons {
+    height: 6%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    margin-top: 3vh;
+    margin-bottom: auto;
 }
 
-#control-buttons {
-    /* height: 50%; */
+#bottom-buttons {
+    height: 8%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    margin-bottom: 3vh;
+}
+
+.control-buttons {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-    margin-bottom: 3vh;
-    margin-top: 1vh;
 }
 
 .control-button {
     position: relative;
     height: 100%;
-    width: 20%;
+    width: 15%;
     background-color: rgb(50, 50, 50);
     box-shadow: 0 5px rgb(30, 30, 30);
     border: none;
@@ -124,6 +131,10 @@ body {
     cursor: pointer;
     padding: 0;
     color: white;
+}
+
+.control-button > i {
+    font-size: 3.5vmin;
 }
 
 .control-button:hover {
@@ -135,25 +146,125 @@ body {
     transform: translateY(4px);
 }
 
-/* #about {
-    width: 45%;
-} */
+#options-box {
+    position: fixed;
+    display: flex;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10;
+}
 
 #menu-toggle {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
     background-color: transparent;
     border: none;
-    font-size: 2vmin;
-    cursor: pointer;
     padding: 0;
-    margin-bottom: 2%;
-    margin-left: 2%;
+    cursor: pointer;
     color: white;
 }
 
 #menu-toggle:hover {
     color: rgb(140, 140, 140);
+}
+
+#debug {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: white;
+}
+
+#debug:hover {
+    color: rgb(140, 140, 140);
+}
+
+/* .material-icons {
+    transform: scale(150%);
+    font-size: xx-small;
+} */
+
+/* ------------------------------------------------ */
+
+.button-tooltip {
+    color: rgb(140, 140, 140);
+    font-family: "Rubik", sans-serif;
+}
+
+#submit:hover > i {
+    display: none;
+}
+#submit:hover > p {
+    display: initial !important;
+}
+
+#repeat-last-input:hover > i {
+    display: none;
+}
+#repeat-last-input:hover > p {
+    display: initial !important;
+}
+
+#mirror-x-axis:hover > i {
+    display: none;
+}
+#mirror-x-axis:hover > p {
+    display: initial !important;
+}
+
+#mirror-y-axis:hover > i {
+    display: none;
+}
+#mirror-y-axis:hover > p {
+    display: initial !important;
+}
+
+#mirror-z-axis:hover > i {
+    display: none;
+}
+#mirror-z-axis:hover > p {
+    display: initial !important;
+}
+
+#invert:hover > i {
+    display: none;
+}
+#invert:hover > p {
+    display: initial !important;
+}
+
+/* ------------------------------------------------ */
+
+#scramble:hover > i {
+    display: none;
+}
+#scramble:hover > p {
+    display: initial !important;
+}
+
+#reset:hover > i {
+    display: none;
+}
+#reset:hover > p {
+    display: initial !important;
+}
+
+#undo:hover > i {
+    display: none;
+}
+#undo:hover > p {
+    display: initial !important;
+}
+
+#redo:hover > i {
+    display: none;
+}
+#redo:hover > p {
+    display: initial !important;
+}
+
+#toggle-animation:hover > i {
+    display: none !important;
+}
+#toggle-animation:hover > p {
+    display: initial !important;
 }
