@@ -311,6 +311,8 @@ document.getElementById("reset").onclick = () => {
         animationSpeed = 0.05;
         animSpeedSlider.value = 0.05;
         doAnimation = true;
+        document.getElementById("video-on").style.display = "none";
+        document.getElementById("video-off").style.display = "initial";
     }
 };
 
