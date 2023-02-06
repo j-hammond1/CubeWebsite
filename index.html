@@ -36,49 +36,92 @@
         </canvas>
 
         <div id="control-menu">
-            <h1 id="header">JCube</h1>
+            <h1 class="header" id="main-header">JCube</h1>
+
+            <h2 class="header" id="setup-header">Setup</h2>
             <textarea
+                class="txtarea"
+                id="setup-input"
+                placeholder="Type some setup moves here...&#10;[WARNING: This resets the cube]"
+            ></textarea>
+
+            <h2 class="header" id="move-input-header">Moves</h2>
+            <textarea
+                class="txtarea"
                 id="move-input"
-                placeholder="Input some moves...&#10;Example: U D' M2 S r l' x z2"
+                placeholder="Type some moves here...&#10;[Notation Example: U D' M2 r l' x z2]"
             ></textarea>
 
             <div id="top-buttons">
-                <div class="control-buttons">
-                    <button class="control-button" id="submit" type="button">
-                        <i class="material-icons">check</i>
-                        <p class="button-tooltip" style="display: none">Submit</p>
-                    </button>
+                <button class="control-button" id="submit" type="button">
+                    <i class="material-icons">check</i>
+                    <p class="button-tooltip" style="display: none">Submit</p>
+                </button>
 
-                    <button class="control-button" id="repeat-last-input" type="button">
-                        <i class="material-icons">repeat</i>
-                        <p class="button-tooltip" style="display: none">Repeat</p>
-                    </button>
+                <button class="control-button" id="repeat-last-input" type="button">
+                    <i class="material-icons">repeat</i>
+                    <p class="button-tooltip" style="display: none">Repeat</p>
+                </button>
 
-                    <button class="control-button" id="mirror-x-axis" type="button">
-                        <i class="material-icons">flip</i>
-                        <p class="button-tooltip" style="display: none">Mirror (x)</p>
-                    </button>
+                <button class="control-button" id="mirror-x-axis" type="button">
+                    <i class="material-icons">flip</i>
+                    <p class="button-tooltip" style="display: none">Mirror (x)</p>
+                </button>
 
-                    <button class="control-button" id="mirror-y-axis" type="button">
-                        <i class="material-icons" style="transform: rotate(90deg)">flip</i>
-                        <p class="button-tooltip" style="display: none">Mirror (y)</p>
-                    </button>
+                <button class="control-button" id="mirror-y-axis" type="button">
+                    <i class="material-icons" style="transform: rotate(90deg)">flip</i>
+                    <p class="button-tooltip" style="display: none">Mirror (y)</p>
+                </button>
 
-                    <button class="control-button" id="mirror-z-axis" type="button">
-                        <i class="material-icons" style="transform: rotate(-45deg)">flip</i>
-                        <p class="button-tooltip" style="display: none">Mirror (z)</p>
-                    </button>
+                <button class="control-button" id="mirror-z-axis" type="button">
+                    <i class="material-icons" style="transform: rotate(-45deg)">flip</i>
+                    <p class="button-tooltip" style="display: none">Mirror (z)</p>
+                </button>
 
-                    <button class="control-button" id="invert" type="button">
-                        <i class="material-icons">invert_colors</i>
-                        <p class="button-tooltip" style="display: none">Invert Input</p>
-                    </button>
-                </div>
+                <button class="control-button" id="invert" type="button">
+                    <i class="material-icons">invert_colors</i>
+                    <p class="button-tooltip" style="display: none">Invert Input</p>
+                </button>
             </div>
 
-            <div id="slider-div">
-                <i class="material-icons" style="font-size: 4vmin">speed</i>
-                <!-- <i class="fa-solid fa-stopwatch fa-2x"></i> -->
+            <div id="visual-settings">
+                <h2 class="header" id="visuals-header">Visuals</h2>
+
+                <div id="selectors">
+                    <select class="selector" id="piece-selector">
+                        <option value="Pieces" disabled selected>Pieces</option>
+                        <option value="All">All</option>
+                        <option value="Centers">Centers</option>
+                        <option value="Edges">Edges</option>
+                        <option value="Corners">Corners</option>
+                    </select>
+
+                    <select class="selector" id="stage-selector">
+                        <option value="Stage" disabled selected>Stage</option>
+                        <option value="Full">Full</option>
+                        <option value="Cross">Cross</option>
+                        <option value="F2L">F2L</option>
+                        <option value="OLL">OLL</option>
+                        <option value="PLL">PLL</option>
+                    </select>
+
+                    <select class="selector" id="model-selector">
+                        <option value="Model" disabled selected>Model</option>
+                        <option value="Blank">Blank</option>
+                        <option value="Stickerless">Stickerless</option>
+                        <option value="Stickered">Stickered</option>
+                        <option value="Speedcube">Speedcube</option>
+                        <option value="Grayscale">Grayscale</option>
+                        <option value="BLD">BLD</option>
+                        <option value="Earth">Earth</option>
+                        <option value="Rose">Rose</option>
+                        <option value="Checkered">Checkered</option>
+                        <option value="Nature">Nature</option>
+                        <option value="Debug1">Debug1</option>
+                        <option value="Debug2">Debug2</option>
+                    </select>
+                </div>
+
                 <input
                     id="anim-speed-slider"
                     type="range"
@@ -87,36 +130,57 @@
                     step="0.005"
                     value="0.05"
                 />
-            </div>
 
-            <div id="bottom-buttons">
-                <div class="control-buttons">
-                    <button class="control-button" id="scramble" type="button">
-                        <i class="material-icons">shuffle</i>
-                        <p class="button-tooltip" style="display: none">Scramble</p>
-                    </button>
+                <div id="color-pickers">
+                    <input type="color" id="u-clr-picker" value="#ffffff" />
+                    <input type="color" id="d-clr-picker" value="#f5f500" />
+                    <input type="color" id="f-clr-picker" value="#007000" />
+                    <input type="color" id="b-clr-picker" value="#0000ff" />
+                    <input type="color" id="r-clr-picker" value="#d10000" />
+                    <input type="color" id="l-clr-picker" value="#ef6600" />
+                    <!-- <input type="color" id="base-clr-picker" value="#000000" /> -->
+                </div>
 
-                    <button class="control-button" id="reset" type="button">
-                        <i class="material-icons">restart_alt</i>
-                        <p class="button-tooltip" style="display: none">Reset</p>
-                    </button>
-
-                    <button class="control-button" id="undo" type="button">
-                        <i class="material-icons">undo</i>
-                        <p class="button-tooltip" style="display: none">Undo</p>
-                    </button>
-
-                    <button class="control-button" id="redo" type="button">
-                        <i class="material-icons">redo</i>
-                        <p class="button-tooltip" style="display: none">Redo</p>
-                    </button>
-
+                <div id="visual-buttons">
                     <button class="control-button" id="toggle-animation" type="button">
                         <i class="material-icons" id="video-off">videocam_off</i>
                         <i class="material-icons" id="video-on" style="display: none">videocam</i>
                         <p class="button-tooltip" style="display: none">Animation</p>
                     </button>
+
+                    <button class="control-button" id="toggle-transparency" type="button">
+                        <i class="material-icons" id="transparency">lens_blur</i>
+                        <p class="button-tooltip" style="display: none">Transparency</p>
+                    </button>
                 </div>
+            </div>
+
+            <div id="bottom-buttons">
+                <button class="control-button" id="scramble" type="button">
+                    <i class="material-icons">shuffle</i>
+                    <p class="button-tooltip" style="display: none">Scramble</p>
+                </button>
+
+                <button class="control-button" id="reset" type="button">
+                    <i class="material-icons">restart_alt</i>
+                    <p class="button-tooltip" style="display: none">Reset</p>
+                </button>
+
+                <button class="control-button" id="undo" type="button">
+                    <i class="material-icons">undo</i>
+                    <p class="button-tooltip" style="display: none">Undo</p>
+                </button>
+
+                <button class="control-button" id="redo" type="button">
+                    <i class="material-icons">redo</i>
+                    <p class="button-tooltip" style="display: none">Redo</p>
+                </button>
+
+                <!-- <button class="control-button" id="toggle-animation" type="button">
+                    <i class="material-icons" id="video-off">videocam_off</i>
+                    <i class="material-icons" id="video-on" style="display: none">videocam</i>
+                    <p class="button-tooltip" style="display: none">Animation</p>
+                </button> -->
             </div>
         </div>
 
@@ -125,8 +189,12 @@
                 <i class="material-icons" style="font-size: 8vmin">menu</i>
             </button>
 
+            <button id="sound-toggle" type="button">
+                <i class="material-icons" style="font-size: 6vmin">volume_up</i>
+            </button>
+
             <button id="debug" type="button">
-                <i class="material-icons" style="font-size: 5vmin">bug_report</i>
+                <i class="material-icons" style="font-size: 6vmin; display: none">bug_report</i>
             </button>
         </div>
 

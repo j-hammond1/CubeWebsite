@@ -17,7 +17,11 @@ import {
     M_TRACK,
     L_TRACK,
 } from "./hitboxes.js";
-import { getSubCubeWorldDirection, getSubCubeIndex } from "./solver/cube-solver.js";
+import {
+    getSubCubeWorldDirection,
+    getSubCubeIndex,
+    getSubCubeAtIndex,
+} from "./solver/cube-solver.js";
 import { getOLLAlgorithm } from "./solver/OLL-detection.js";
 import { getLLSubCubePositions } from "./solver/PLL-detection.js";
 import {
@@ -28,6 +32,8 @@ import {
     getSubCube5Solution,
     getSubCube7Solution,
 } from "./solver/cross-solution.js";
+
+import { doAnimation, setDoAnimation, setisTransparent } from "./visual-settings.js";
 
 // ~~ SCENE ~~
 const scene = new THREE.Scene();
@@ -45,9 +51,9 @@ renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 // ~~ CAMERA AND LIGHTING ~~
 const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 150);
 camera.position.set(30, 35, 40);
-// camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.5));
+// camera.add(new THREE.DirectionalLight(0xaaaaaa, 0.3));
 // scene.add(camera);
-// scene.add(new THREE.AmbientLight(0xaaaaaa));
+// scene.add(new THREE.AmbientLight(0x909090));
 scene.add(new THREE.AmbientLight(0xffffff));
 
 // // ~~ AXES HELPER ~~
@@ -140,6 +146,13 @@ document.getElementById("menu-toggle").onclick = () => {
     resizeCanvas();
 };
 
+// ~~ SOUND TOGGLE ~~
+let hasSound = false;
+document.getElementById("sound-toggle").onclick = () => {
+    hasSound = !hasSound;
+    console.log("toggled sound:", hasSound);
+};
+
 // ~~ TEXTAREA MOVE INPUT ~~
 const moveInput = document.getElementById("move-input");
 const validMoves = /[UEDFSBRMLudfbrlxyz]/;
@@ -148,20 +161,34 @@ let lastInput = [];
 
 function getFilteredMoveInput(inputArr) {
     // TEST: U'DexE2/'EE"@@f2'M'?
+    let endOfComment = -1;
     let moves = [];
-    inputArr.forEach((value, indx) => {
-        if (validMoves.test(value)) {
-            let indxOfValidMove = inputArr.indexOf(value, indx);
-            let charAfterValidMove = inputArr[indxOfValidMove + 1];
 
-            if (validModifiers.test(charAfterValidMove)) {
-                let modifiedMoveStr = value + charAfterValidMove;
-                moves.push(modifiedMoveStr);
+    inputArr.forEach((value, indx) => {
+        let hasComment = value === "/" && inputArr[indx + 1] === "/";
+
+        if (hasComment) {
+            console.log("comment at:", indx);
+            let nextNewline = inputArr.indexOf("\n", indx);
+            if (nextNewline === -1) {
+                endOfComment = inputArr.length;
             } else {
-                moves.push(value);
+                endOfComment = nextNewline;
+            }
+            console.log("comment end at:", endOfComment);
+        }
+
+        if (indx > endOfComment) {
+            if (validMoves.test(value)) {
+                if (validModifiers.test(inputArr[indx + 1])) {
+                    moves.push(value + inputArr[indx + 1]);
+                } else {
+                    moves.push(value);
+                }
             }
         }
     });
+
     return moves;
 }
 
@@ -252,11 +279,26 @@ animSpeedSlider.oninput = () => {
     console.log(`animationSpeed: ${animationSpeed}`);
 };
 
+// ~~ TEXTAREA SETUP INPUT ~~
+const setupInput = document.getElementById("setup-input");
+setupInput.oninput = doSetupMoves;
+function doSetupMoves() {
+    let inputArr = setupInput.value.split("");
+    let setupMoves = getFilteredMoveInput(inputArr);
+    console.log("setup moves:", setupMoves);
+
+    // TODO: make this more efficient, resetting the whole cube is a lazy solution
+    scene.remove(...subCubes);
+    resetCube();
+    scene.add(...subCubes);
+    setupMoves.forEach((move) => FINISHERS[POSSIBLE_MOVES.indexOf(move)]());
+}
+
 // ~~ SCRAMBLE BUTTON ~~
 document.getElementById("scramble").onclick = () => {
     if (!isTurningActive) {
         let lastFace;
-        while (turnList.length < 30) {
+        while (turnList.length < 25) {
             let randFace = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
             let randTurn = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
 
@@ -289,11 +331,16 @@ document.getElementById("scramble").onclick = () => {
                 }
             }
         }
-        console.log(turnList);
-        doTurnsFromList = true;
-        let moves = turnList.map((id) => POSSIBLE_MOVES[id]);
-        moveInput.placeholder = moves.join(" ");
+
+        // console.log(turnList);
+        // doTurnsFromList = true;
+        // moveInput.placeholder = moves.join(" ");
         // console.log(moves.join(" "));
+        let moves = turnList.map((id) => POSSIBLE_MOVES[id]);
+        turnList = [];
+        moveInput.value = moves.join(" ");
+        // setupInput.value = moves.join(" ");
+        // doSetupMoves();
     }
 };
 
@@ -307,12 +354,27 @@ document.getElementById("reset").onclick = () => {
         completedMoves = [];
         undoneMoves = [];
         lastInput = [];
-        moveInput.placeholder = "Input some moves...\nExample: U D' M2 S r l' x z2";
+        moveInput.placeholder = "Type some moves here...\n[Notation Example: U D' M2 r l' x z2]";
         animationSpeed = 0.05;
         animSpeedSlider.value = 0.05;
-        doAnimation = true;
+        hasSound = false;
+        setDoAnimation(true);
+        setisTransparent(false);
+        moveInput.value = "";
+        setupInput.value = "";
         document.getElementById("video-on").style.display = "none";
         document.getElementById("video-off").style.display = "initial";
+        document.getElementById("piece-selector").value = "Pieces";
+        document.getElementById("stage-selector").value = "Stage";
+        document.getElementById("model-selector").value = "Model";
+
+        document.getElementById("u-clr-picker").value = "#ffffff";
+        document.getElementById("d-clr-picker").value = "#f5f500";
+        document.getElementById("f-clr-picker").value = "#007000";
+        document.getElementById("b-clr-picker").value = "#0000ff";
+        document.getElementById("r-clr-picker").value = "#d10000";
+        document.getElementById("l-clr-picker").value = "#ef6600";
+        // document.getElementById("base-clr-picker").value = "#000000";
     }
 };
 
@@ -345,21 +407,6 @@ document.getElementById("redo").onclick = () => {
         let lastMove = undoneMoves.pop();
         completedMoves.push(lastMove);
         turnStarter(lastMove);
-    }
-};
-
-// ~~ TOGGLE ANIMATION ~~
-document.getElementById("toggle-animation").onclick = () => {
-    if (!isTurningActive) {
-        console.log("toggling animation");
-        doAnimation = !doAnimation;
-        if (doAnimation) {
-            document.getElementById("video-on").style.display = "none";
-            document.getElementById("video-off").style.display = "initial";
-        } else {
-            document.getElementById("video-off").style.display = "none";
-            document.getElementById("video-on").style.display = "initial";
-        }
     }
 };
 
@@ -436,16 +483,17 @@ function documentKeyDown(event) {
     }
     if (event.key === "=") {
         console.log("debug key 2 pressed");
+        console.log(subCubes);
         // console.log(getSubCubeWorldDirection(0));
         // console.log(getSubCubeIndex(0));
 
-        let OLLAlgorithm = getOLLAlgorithm();
-        if (OLLAlgorithm !== null) {
-            console.log(OLLAlgorithm.join(" "));
-            turnList.push(...OLLAlgorithm.map((move) => POSSIBLE_MOVES.indexOf(move)));
-            console.log("turnList:", turnList);
-            doTurnsFromList = true;
-        }
+        // let OLLAlgorithm = getOLLAlgorithm();
+        // if (OLLAlgorithm !== null) {
+        //     console.log(OLLAlgorithm.join(" "));
+        //     turnList.push(...OLLAlgorithm.map((move) => POSSIBLE_MOVES.indexOf(move)));
+        //     console.log("turnList:", turnList);
+        //     doTurnsFromList = true;
+        // }
     }
 }
 
@@ -566,8 +614,7 @@ function dragTurn(track, turnDir, turn1, turn2) {
 }
 
 // ~~ TURNING SYSTEM ~~
-let isTurningActive = false;
-let doAnimation = true;
+export let isTurningActive = false;
 let animationSpeed = 0.05;
 let turnID;
 let face;
@@ -578,12 +625,14 @@ function turnStarter(id) {
 
     if (doAnimation) {
         face = new THREE.Group();
-        // let turnSound = new Audio("./turnSound.mp3").play();
         for (let i of allFaceIndices(turnID)) {
             face.add(subCubes[i]);
         }
         scene.add(face);
         isTurningActive = true;
+        if (hasSound) {
+            new Audio("./turnSound.mp3").play();
+        }
     } else {
         turnFinisher();
     }

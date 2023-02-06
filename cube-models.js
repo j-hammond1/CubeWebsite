@@ -10,12 +10,12 @@ const CORNER_INDICES = [
     0, 2, 6, 8, 9, 11, 15, 17, 18, 20, 24, 26, 27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53,
 ];
 
-const R_INDICES = [36, 37, 38, 39, 40, 41, 42, 43, 44];
-const L_INDICES = [18, 19, 20, 21, 22, 23, 24, 25, 26];
-const U_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-const D_INDICES = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-const F_INDICES = [27, 28, 29, 30, 31, 32, 33, 34, 35];
-const B_INDICES = [45, 46, 47, 48, 49, 50, 51, 52, 53];
+export const R_INDICES = [36, 37, 38, 39, 40, 41, 42, 43, 44];
+export const L_INDICES = [18, 19, 20, 21, 22, 23, 24, 25, 26];
+export const U_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+export const D_INDICES = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+export const F_INDICES = [27, 28, 29, 30, 31, 32, 33, 34, 35];
+export const B_INDICES = [45, 46, 47, 48, 49, 50, 51, 52, 53];
 
 const SUBCUBE_STICKER_INDICES = [
     [0, 18, 47],
