@@ -18,7 +18,7 @@ D L F' L' S L F L' S' D'
 R' D' U' R' D R U' R' D' R U2 D R
 U' D' R D R' U R D' D D' R' D
 U D R D' U' R' D R U R' D' R D R' U' D'
-// parity
+// parity 
 R U D R' F' R U R' U' R' F R2 U' R' U' R D' R'
  */
 
