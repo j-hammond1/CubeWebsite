@@ -1,6 +1,17 @@
 import * as THREE from "threejs";
 import { subCubes } from "../cube-builder.js";
 
+/* 
+F U2 L2 B2 F' U L2 U R2 D2 L' B L2 B' R2 U2
+
+y x' // inspection
+U R2 U' F' L F' U' L' // xx-cross
+U' R U R' // 3rd pair
+R' U R U' U' R' U R // 4th pair
+U R' U' R U' R' U2 R // ZBLL
+U // AUF
+*/
+
 export function getSubCubeIndex(cubeId) {
     return subCubes.findIndex((subCube) => subCube.name.replace("subCube#", "") == cubeId);
 }
