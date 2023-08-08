@@ -290,20 +290,32 @@ export function initCheckeredModel() {
     txtrs.fill(LOADER.load("./images/stickers/checker_marble.png"));
 }
 
-export function initVideoModel() {
-    // setU_CLR(0xffffff);
-    // setD_CLR(0xffffff);
-    // setF_CLR(0xffffff);
-    // setB_CLR(0xffffff);
-    // setR_CLR(0xffffff);
-    // setL_CLR(0xffffff);
+export function initSteveModel() {
+    setU_CLR(0xffffff);
+    setD_CLR(0xffffff);
+    setF_CLR(0xffffff);
+    setB_CLR(0xffffff);
+    setR_CLR(0xffffff);
+    setL_CLR(0xffffff);
 
-    initVideoFace(U_INDICES, "./videos/dogears_mp4s/dogears_");
-    initVideoFace(D_INDICES, "./videos/dogears_mp4s/dogears_");
-    initVideoFace(F_INDICES, "./videos/dogears_mp4s/dogears_");
-    initVideoFace(B_INDICES, "./videos/dogears_mp4s/dogears_");
-    initVideoFace(R_INDICES, "./videos/dogears_mp4s/dogears_");
-    initVideoFace(L_INDICES, "./videos/dogears_mp4s/dogears_");
+    for (let i of U_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/U/${U_INDICES.indexOf(i)}.png`);
+    }
+    for (let i of D_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/D/${D_INDICES.indexOf(i)}.png`);
+    }
+    for (let i of F_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/F/${F_INDICES.indexOf(i)}.png`);
+    }
+    for (let i of B_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/B/${B_INDICES.indexOf(i)}.png`);
+    }
+    for (let i of R_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/R/${R_INDICES.indexOf(i)}.png`);
+    }
+    for (let i of L_INDICES) {
+        txtrs[i] = LOADER.load(`./images/stickers/steve/L/${L_INDICES.indexOf(i)}.png`);
+    }
 }
 
 function initVideoFace(indices, path) {

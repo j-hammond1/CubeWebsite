@@ -14,7 +14,7 @@ import {
     initRoseModel,
     initCheckeredModel,
     initChromecastImgsModel,
-    initVideoModel,
+    initSteveModel,
 } from "./cube-models.js";
 
 const BASE_CLR = new THREE.Color(0x000000);
@@ -71,7 +71,7 @@ initStickeredModel();
 // initRoseModel();
 // initCheckeredModel();
 // initChromecastImgsModel();
-// initVideoModel();
+// initSteveModel();
 
 initCube();
 
